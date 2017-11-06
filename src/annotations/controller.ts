@@ -1,4 +1,5 @@
-import {NextFunction, Request, Response} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
+import {injectable} from './di'
 
 const http = (method: string) => (path: string) => (target: any, key: string) => {
   target.constructor.handlers.push({path, key, method: method, filter: target.constructor.name})
@@ -20,19 +21,17 @@ export const httpHead = http('head')
 
 export const httpAll = http('all')
 
-export const routeList: any[] = []
+export const router = Router()
 
-export const controller = (constructor: Function) => {
-  routeList.push(constructor)
-}
+export const controller = (constructor: any) => injectable(constructor.name)(constructor)
 
-export const routerBind = (router: any, handlers: any, route: any) =>
-  handlers.filter(({filter}: { filter: any }) => filter === route.constructor.name)
+export const routerBind = (router: any, handlers: any, controller: any) =>
+  handlers.filter(({filter}: { filter: any }) => filter === controller.constructor.name)
           .forEach(
             (it: any) => router[it.method](
               it.path,
               async (req: Request, res: Response, next: NextFunction) =>
-                route.response(res, await route[it.key](req, res, next))
+                controller.response(res, await controller[it.key](req, res, next))
             )
           )
 

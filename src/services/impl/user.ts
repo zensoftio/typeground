@@ -1,11 +1,24 @@
 import UserModel from '../../models/user'
-import {UserService} from '../index'
-import {injectable} from '../../annotations/di'
+import {TestService, UserService} from '../index'
+import {inject, injectable} from '../../annotations/di'
+import BaseService from './common/base'
 
 @injectable('UserService')
-export default class DefaultUserService implements UserService {
+export default class DefaultUserService extends BaseService implements UserService {
   
-  async create() {
+  private testService: TestService
+  
+  constructor() {
+    super()
+    console.log('create DefaultUserService')
+  }
+  
+  @inject('TestService')
+  setTestService(testService: TestService) {
+    this.testService = testService
+  }
+  
+  async createUser() {
     const userModel = new UserModel()
     userModel.name = Math.random()
                          .toString()
@@ -14,6 +27,7 @@ export default class DefaultUserService implements UserService {
   }
   
   list() {
+    this.testService.test()
     return UserModel.getAll()
   }
   

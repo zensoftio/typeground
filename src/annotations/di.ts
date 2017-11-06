@@ -1,24 +1,19 @@
 import 'reflect-metadata'
-import {useFactory} from 'di-typescript'
 
 interface Constructor {
   new (): any
 }
 
-const injectionList: Map<string, Constructor> = new Map()
+export const injectionList: Map<string, Constructor> = new Map()
 
-export const i = (inter: string) => (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
-  useFactory(
-    () => {
-      const constructor = injectionList.get(inter)
-      if (!constructor) {
-        throw new Error(`There is no implementation for ${inter}`)
-      }
-      return new constructor()
-    }
-  )(target, propertyKey, parameterIndex)
+export const injectorList: Function[] = []
+
+export const injectable = (qualifier: string) => (constructor: any) => {
+  injectionList.set(qualifier, new constructor())
 }
 
-export const injectable = (inter: string) => (constructor: Constructor) => {
-  injectionList.set(inter, constructor)
+export const inject = (qualifier: string) => (target: any, propertyKey: string | symbol) => {
+  if (target[propertyKey]) {
+    injectorList.push(() => target[propertyKey](injectionList.get(qualifier)))
+  }
 }

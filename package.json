@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run migrate && node ./bin/www",
     "migrate": "node ./node_modules/db-migrate/bin/db-migrate up",
-    "tsc": "node ./node_modules/typescript/bin/tsc"
+    "tsc": "node ./node_modules/typescript/bin/tsc",
+    "clean": "node ./node_modules/rimraf/bin.js ./dist/"
   },
   "keywords": [
     "starter",
@@ -20,7 +21,6 @@
     "cookie-parser": "^1.4.3",
     "db-migrate": "^0.10.0-beta.24",
     "db-migrate-pg": "^0.2.5",
-    "di-typescript": "^1.1.4",
     "errorhandler": "^1.5.0",
     "express": "^4.16.2",
     "method-override": "^2.3.10",
@@ -28,6 +28,7 @@
     "pg": "^6.4.2",
     "pg-hstore": "^2.3.2",
     "reflect-metadata": "^0.1.10",
+    "rimraf": "^2.6.2",
     "sequelize": "^4.20.3",
     "sequelize-typescript": "^0.5.0"
   },

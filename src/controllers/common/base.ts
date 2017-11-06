@@ -1,18 +1,19 @@
-import {Response, Router} from 'express'
-import {routerBind} from '../../annotations/controller'
-import {Injector} from 'di-typescript'
+import {Response} from 'express'
+import {router, routerBind} from '../../annotations/controller'
 
 export class BaseController {
   
   protected static handlers: { path: string, key: string, method: string }[] = []
   
-  public static create(router: Router) {
-    const injector = new Injector()
-    const indexRoute = injector.get(this)
-    routerBind(router, this.handlers, indexRoute)
+  constructor() {
+    this.bindRouter()
   }
   
   protected response(res: Response, options: any) {
     res.json(options)
+  }
+  
+  private bindRouter() {
+    routerBind(router, BaseController.handlers, this)
   }
 }

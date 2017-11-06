@@ -1,12 +1,13 @@
 import * as path from 'path'
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
-import {Application, NextFunction, Router} from 'express'
+import {Application, NextFunction} from 'express'
 // import * as morgan from "morgan";
 import * as methodOverride from 'method-override'
 import {Sequelize} from 'sequelize-typescript'
-import {routeList} from './annotations/controller'
 import autoImport from './utils/auto-import'
+import {injectorList} from './annotations/di'
+import {router} from './annotations/controller'
 // import errorHandler = require("errorhandler");
 import cookieParser = require('cookie-parser')
 
@@ -21,20 +22,10 @@ export class Server {
     
     //configure application
     this.config()
-    
-    //add routes
-    this.routes()
-    
-    //add api
-    this.api()
   }
   
   public static bootstrap(): Server {
     return new Server()
-  }
-  
-  private api() {
-    //empty for now
   }
   
   private async config() {
@@ -78,19 +69,21 @@ export class Server {
                                       modelPaths: [path.join(__dirname, 'models')]
                                     })
     
+    // register services
     await autoImport(
       path.join(__dirname, 'services', 'impl'),
       it => !it.includes('.map') && it.includes('.js')
     )
-  }
-  
-  private async routes() {
+    
+    // register controllers
     await autoImport(
       path.join(__dirname, 'controllers'),
       it => !it.includes('.map') && it.includes('.js')
     )
-    const router = Router()
-    routeList.forEach(it => it.create(router))
+  
+    // inject
+    injectorList.forEach(setter => setter())
+    
     this.app.use(router)
   }
 }

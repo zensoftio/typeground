@@ -1,21 +1,27 @@
 import {BaseController} from './common/base'
 import {controller, httpGet, httpPost} from '../annotations/controller'
 import {UserService} from '../services/index'
-import {Inject} from 'di-typescript'
-import {i} from '../annotations/di'
+import {inject} from '../annotations/di'
 
-@Inject
 @controller
 class UserController extends BaseController {
   
-  constructor(@i('UserService') private userService: UserService) {
+  private userService: UserService
+  
+  constructor() {
     super()
+    console.log('create UserController')
+  }
+  
+  @inject('UserService')
+  setUserService(userService: UserService) {
+    this.userService = userService
   }
   
   @httpPost('/')
   // req: Request, res: Response, next: NextFunction
   protected index = async () => {
-    const userModel = await this.userService.create()
+    const userModel = await this.userService.createUser()
     
     return userModel.toJSON()
   }
