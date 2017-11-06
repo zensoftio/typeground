@@ -8,11 +8,6 @@ class UserController extends BaseController {
   
   private userService: UserService
   
-  constructor() {
-    super()
-    console.log('create UserController')
-  }
-  
   @inject('UserService')
   setUserService(userService: UserService) {
     this.userService = userService

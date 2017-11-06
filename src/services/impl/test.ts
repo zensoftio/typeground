@@ -7,11 +7,6 @@ export default class DefaultTestService extends BaseService implements TestServi
   
   private testService2: TestService2
   
-  constructor() {
-    super()
-    console.log('create DefaultTestService')
-  }
-  
   @inject('TestService2')
   setTestService2(testService2: TestService2) {
     this.testService2 = testService2

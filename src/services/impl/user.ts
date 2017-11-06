@@ -8,11 +8,6 @@ export default class DefaultUserService extends BaseService implements UserServi
   
   private testService: TestService
   
-  constructor() {
-    super()
-    console.log('create DefaultUserService')
-  }
-  
   @inject('TestService')
   setTestService(testService: TestService) {
     this.testService = testService
