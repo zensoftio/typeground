@@ -1,4 +1,3 @@
-import {Request, Response} from 'express'
 import {BaseController} from './common/base'
 import {controller, httpGet, httpPost} from '../annotations/controller'
 import {UserService} from '../services/index'
@@ -14,17 +13,19 @@ class UserController extends BaseController {
   }
   
   @httpPost('/')
-  protected index = async (req: Request, res: Response) => {
+  // req: Request, res: Response, next: NextFunction
+  protected index = async () => {
     const userModel = await this.userService.create()
     
-    this.response(res, userModel.toJSON())
+    return userModel.toJSON()
   }
   
   @httpGet('/')
-  protected list = async (req: Request, res: Response) => {
+  // req: Request, res: Response, next: NextFunction
+  protected list = async () => {
     const userModelList = await this.userService.list()
     
-    this.response(res, userModelList.map(it => it.toJSON()))
+    return userModelList.map(it => it.toJSON())
   }
 }
 
