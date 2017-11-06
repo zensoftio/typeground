@@ -4,10 +4,10 @@
   "description": "TypeScript Express",
   "main": "index.js",
   "scripts": {
-    "start": "npm run migrate && node ./bin/www",
-    "migrate": "node ./node_modules/db-migrate/bin/db-migrate up",
+    "start": "npm run clean && npm run tsc && npm run migrate && node ./bin/www",
+    "clean": "node ./node_modules/rimraf/bin.js ./dist/",
     "tsc": "node ./node_modules/typescript/bin/tsc",
-    "clean": "node ./node_modules/rimraf/bin.js ./dist/"
+    "migrate": "node ./node_modules/db-migrate/bin/db-migrate up"
   },
   "keywords": [
     "starter",
