@@ -2,14 +2,14 @@ import * as path from 'path'
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
 import {Application, NextFunction} from 'express'
-// import * as morgan from "morgan";
 import * as methodOverride from 'method-override'
 import {Sequelize} from 'sequelize-typescript'
 import autoImport from './utils/auto-import'
 import {injectorList} from './annotations/di'
 import {router} from './annotations/controller'
-// import errorHandler = require("errorhandler");
 import cookieParser = require('cookie-parser')
+import errorHandler = require('errorhandler')
+import morgan = require('morgan')
 
 
 export class Server {
@@ -35,7 +35,7 @@ export class Server {
     this.app.set('view engine', 'json')
     
     //use logger middlware
-    // this.app.use(morgan('dev'));
+    this.app.use(morgan('dev'))
     
     //use response form parser middlware
     this.app.use(bodyParser.json())
@@ -58,7 +58,7 @@ export class Server {
     })
     
     //error handling
-    // this.app.use(errorHandler());
+    this.app.use(errorHandler() as any)
     
     const sequelize = new Sequelize({
                                       host: '192.168.0.251',
@@ -80,7 +80,7 @@ export class Server {
       path.join(__dirname, 'controllers'),
       it => !it.includes('.map') && it.includes('.js')
     )
-  
+    
     // inject
     injectorList.forEach(setter => setter())
     
