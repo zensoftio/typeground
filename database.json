@@ -1,0 +1,12 @@
+{
+  "defaultEnv": "local",
+  "local": {
+    "driver": "pg",
+    "user": "postgres",
+    "password": "qf4E\\+E-",
+    "host": "192.168.0.251",
+    "database": "ts_init",
+    "schema": "public"
+  },
+  "sql-file" : true
+}

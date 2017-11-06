@@ -1,0 +1,43 @@
+{
+  "name": "ts-init",
+  "version": "1.0.0",
+  "description": "TypeScript Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run migrate && node ./bin/www",
+    "migrate": "node ./node_modules/db-migrate/bin/db-migrate up",
+    "tsc": "node ./node_modules/typescript/bin/tsc"
+  },
+  "keywords": [
+    "starter",
+    "express",
+    "typescript"
+  ],
+  "author": "Nick Ro",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "db-migrate": "^0.10.0-beta.24",
+    "db-migrate-pg": "^0.2.5",
+    "di-typescript": "^1.1.4",
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.2",
+    "method-override": "^2.3.10",
+    "morgan": "^1.9.0",
+    "pg": "^6.4.2",
+    "pg-hstore": "^2.3.2",
+    "reflect-metadata": "^0.1.10",
+    "sequelize": "^4.20.3",
+    "sequelize-typescript": "^0.5.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.16.7",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/errorhandler": "0.0.32",
+    "@types/reflect-metadata": "0.0.5",
+    "@types/method-override": "0.0.31",
+    "@types/morgan": "^1.7.35",
+    "typescript": "^2.5.3"
+  }
+}
