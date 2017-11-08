@@ -1,12 +1,26 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-const autoImport = async (folder: string, filter: (file: string) => boolean) => {
-  const files: string[] = fs.readdirSync(folder)
-  return await Promise.all(files.filter(filter)
-                                .map(async it => {
-                                  return await import(path.join(folder, it))
-                                }))
+const walkSync = (dir: string) => {
+  const fileList: string[] = []
+  fs.readdirSync(dir)
+    .forEach(file => {
+      const filePath = path.join(dir, file)
+      if (fs.statSync(filePath)
+            .isDirectory()) {
+        fileList.push(...walkSync(filePath))
+      } else {
+        fileList.push(filePath)
+      }
+    })
+  return fileList
+}
+
+const autoImport = (folder: string, filter: (file: string) => boolean = it => !!it) => {
+  return Promise.all(walkSync(folder)
+                       .filter(it => !it.includes('.map') && it.includes('.js'))
+                       .filter(filter)
+                       .map(it => import(it)))
 }
 
 export default autoImport

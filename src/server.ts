@@ -67,25 +67,23 @@ export class Server {
     //error handling
     this.app.use(errorHandler() as any)
     
-    const sequelize = new Sequelize({
-                                      host: c.get('db.host'),
-                                      database: c.get('db.database'),
-                                      dialect: 'postgres',
-                                      username: c.get('db.user'),
-                                      password: c.get('db.password'),
-                                      modelPaths: [path.join(__dirname, 'models')]
-                                    })
+    new Sequelize({
+                    host: c.get<string>('db.host'),
+                    database: c.get<string>('db.database'),
+                    dialect: 'postgres',
+                    username: c.get<string>('db.user'),
+                    password: c.get<string>('db.password'),
+                    modelPaths: [path.join(__dirname, 'models')]
+                  })
     
     // register services
     await autoImport(
-      path.join(__dirname, 'services', 'impl'),
-      it => !it.includes('.map') && it.includes('.js')
+      path.join(__dirname, 'services', 'impl')
     )
     
     // register controllers
     await autoImport(
-      path.join(__dirname, 'controllers'),
-      it => !it.includes('.map') && it.includes('.js')
+      path.join(__dirname, 'controllers')
     )
     
     // inject
