@@ -7,10 +7,11 @@ import {Sequelize} from 'sequelize-typescript'
 import autoImport from './utils/auto-import'
 import {injectorList} from './annotations/di'
 import {router} from './annotations/controller'
+import * as c from 'config'
+import DBMigrate = require('db-migrate')
 import cookieParser = require('cookie-parser')
 import errorHandler = require('errorhandler')
 import morgan = require('morgan')
-
 
 export class Server {
   
@@ -20,12 +21,18 @@ export class Server {
     //create expressjs application
     this.app = express()
     
-    //configure application
-    this.config()
+    this.migration()
+        .then(() => this.config())
+        .then(() => console.log('application has started'))
   }
   
   public static bootstrap(): Server {
     return new Server()
+  }
+  
+  private async migration() {
+    const migration = (DBMigrate as any).getInstance(true, {config: {dev: c.get('db')}})
+    await migration.up()
   }
   
   private async config() {
@@ -61,11 +68,11 @@ export class Server {
     this.app.use(errorHandler() as any)
     
     const sequelize = new Sequelize({
-                                      host: '192.168.0.251',
-                                      database: 'ts_init',
+                                      host: c.get('db.host'),
+                                      database: c.get('db.database'),
                                       dialect: 'postgres',
-                                      username: 'postgres',
-                                      password: 'qf4E\\+E-',
+                                      username: c.get('db.user'),
+                                      password: c.get('db.password'),
                                       modelPaths: [path.join(__dirname, 'models')]
                                     })
     
