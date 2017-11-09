@@ -5,7 +5,7 @@ import {Application, NextFunction} from 'express'
 import * as methodOverride from 'method-override'
 import {Sequelize} from 'sequelize-typescript'
 import autoImport from './utils/auto-import'
-import {injectorList} from './annotations/di'
+import {injectionList, injectorList} from './annotations/di'
 import {router} from './annotations/controller'
 import * as c from 'config'
 import DBMigrate = require('db-migrate')
@@ -88,6 +88,7 @@ export class Server {
     
     // inject
     injectorList.forEach(setter => setter())
+    injectionList.forEach(it => it.postConstruct ? it.postConstruct() : null)
     
     this.app.use(router)
   }

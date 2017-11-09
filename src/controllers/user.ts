@@ -4,7 +4,7 @@ import {UserService} from '../services/index'
 import {inject} from '../annotations/di'
 
 @controller
-class UserController extends BaseController {
+export default class UserController extends BaseController {
   
   private userService: UserService
   
@@ -29,5 +29,3 @@ class UserController extends BaseController {
     return userModelList.map(it => it.toJSON())
   }
 }
-
-export default UserController

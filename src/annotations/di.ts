@@ -1,10 +1,6 @@
 import 'reflect-metadata'
 
-interface Constructor {
-  new (): any
-}
-
-export const injectionList: Map<string, Constructor> = new Map()
+export const injectionList: Map<string, any> = new Map()
 
 export const injectorList: Function[] = []
 
