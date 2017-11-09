@@ -86,6 +86,11 @@ export class Server {
       path.join(__dirname, 'controllers')
     )
     
+    // register listeners
+    await autoImport(
+      path.join(__dirname, 'listeners')
+    )
+    
     // inject
     injectorList.forEach(setter => setter())
     injectionList.forEach(it => it.postConstruct ? it.postConstruct() : null)
