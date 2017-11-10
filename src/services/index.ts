@@ -12,7 +12,6 @@ export interface UserService extends BaseService {
 }
 
 export interface AmqpService extends BaseService {
-  
   sendMessage(exchangeName: string, routingKey: string, message: any, options: ExchangePublishOptions): Promise<any>
   
   subscribe(queueName: string, handler: SubscribeCallback): Promise<void>

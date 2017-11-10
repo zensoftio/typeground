@@ -24,6 +24,7 @@ export class Server {
     this.migration()
         .then(() => this.config())
         .then(() => console.log('application has started'))
+        .catch(e => console.error(e))
   }
   
   public static bootstrap(): Server {
