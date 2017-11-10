@@ -2,6 +2,7 @@ import {BaseController} from './common/base'
 import {controller, httpGet, httpPost} from '../annotations/controller'
 import {UserService} from '../services/index'
 import {inject} from '../annotations/di'
+import {Pathes} from '../enums/pathes'
 
 @controller
 export default class UserController extends BaseController {
@@ -13,7 +14,7 @@ export default class UserController extends BaseController {
     this.userService = userService
   }
   
-  @httpPost('/')
+  @httpPost(Pathes.USER.NEW)
   // req: Request, res: Response, next: NextFunction
   protected index = async () => {
     const userModel = await this.userService.createUser()
@@ -21,7 +22,7 @@ export default class UserController extends BaseController {
     return userModel.toJSON()
   }
   
-  @httpGet('/')
+  @httpGet(Pathes.USER.LIST)
   // req: Request, res: Response, next: NextFunction
   protected list = async () => {
     const userModelList = await this.userService.list()
