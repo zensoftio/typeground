@@ -3,6 +3,9 @@ import {AmqpService, TestService, UserService} from '../index'
 import {inject, injectable} from '../../annotations/di'
 import BaseService from './common/base'
 import * as c from 'config'
+import Pathes from '../../enums/pathes'
+import fetch from 'node-fetch'
+import UserDto from '../../dtos/user'
 
 @injectable('UserService')
 export default class DefaultUserService extends BaseService implements UserService {
@@ -32,7 +35,12 @@ export default class DefaultUserService extends BaseService implements UserServi
     return userModel
   }
   
-  list() {
+  async list() {
+    const all = await fetch(`http://localhost:8080${Pathes.User.ListApi}`)
+    return await all.json<UserDto[]>()
+  }
+  
+  listApi() {
     this.testService.test()
     return UserModel.getAll()
   }

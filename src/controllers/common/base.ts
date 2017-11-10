@@ -11,6 +11,7 @@ export class BaseController {
   }
   
   protected response(res: Response, options: any) {
+    res.status(200)
     res.json(options)
   }
   

@@ -25,7 +25,13 @@ export default class UserController extends BaseController {
   @httpGet(Pathes.User.List)
   // req: Request, res: Response, next: NextFunction
   protected list = async () => {
-    const userModelList = await this.userService.list()
+    return await this.userService.list()
+  }
+  
+  @httpGet(Pathes.User.ListApi)
+  // req: Request, res: Response, next: NextFunction
+  protected listApi = async () => {
+    const userModelList = await this.userService.listApi()
     
     return userModelList.map(it => it.toJSON())
   }
