@@ -11,14 +11,6 @@ export interface UserService extends BaseService {
   listApi(): Promise<UserModel[]>
 }
 
-export interface TestService extends BaseService {
-  test(): void
-}
-
-export interface TestService2 extends BaseService {
-  test2(): void
-}
-
 export interface AmqpService extends BaseService {
   
   sendMessage(exchangeName: string, routingKey: string, message: any, options: ExchangePublishOptions): Promise<any>

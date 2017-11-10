@@ -1,5 +1,5 @@
 import UserModel from '../../models/user'
-import {AmqpService, TestService, UserService} from '../index'
+import {AmqpService, UserService} from '../index'
 import {inject, injectable} from '../../annotations/di'
 import BaseService from './common/base'
 import * as c from 'config'
@@ -10,16 +10,10 @@ import UserDto from '../../dtos/user'
 @injectable('UserService')
 export default class DefaultUserService extends BaseService implements UserService {
   
-  private testService: TestService
   private amqpService: AmqpService
   
   async postConstruct() {
     await this.testAmqp()
-  }
-  
-  @inject('TestService')
-  setTestService(testService: TestService) {
-    this.testService = testService
   }
   
   @inject('AmqpService')
@@ -41,7 +35,6 @@ export default class DefaultUserService extends BaseService implements UserServi
   }
   
   listApi() {
-    this.testService.test()
     return UserModel.getAll()
   }
   
