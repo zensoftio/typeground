@@ -30,8 +30,13 @@ export const routerBind = (router: any, handlers: any, controller: any) =>
           .forEach(
             (it: any) => router[it.method](
               it.path,
-              async (req: Request, res: Response, next: NextFunction) =>
-                controller.response(res, await controller[it.key](req, res, next))
+              async (req: Request, res: Response, next: NextFunction) => {
+                try {
+                  controller.response(res, await controller[it.key](req, res, next))
+                } catch (e) {
+                  controller.error(res, e)
+                }
+              }
             )
           )
 
