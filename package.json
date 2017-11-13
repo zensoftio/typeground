@@ -7,7 +7,8 @@
     "start": "npm run clean && npm run tsc && npm run migrate && node ./bin/www",
     "clean": "node ./node_modules/rimraf/bin.js ./dist/",
     "tsc": "node ./node_modules/typescript/bin/tsc",
-    "migrate": "node ./node_modules/db-migrate/bin/db-migrate"
+    "migrate": "node ./node_modules/db-migrate/bin/db-migrate",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts"
   },
   "keywords": [
     "starter",
@@ -38,13 +39,18 @@
   "devDependencies": {
     "@types/amqp": "^0.2.3",
     "@types/body-parser": "^1.16.7",
+    "@types/chai": "^4.0.4",
     "@types/config": "0.0.33",
     "@types/cookie-parser": "^1.4.1",
     "@types/errorhandler": "0.0.32",
     "@types/method-override": "0.0.31",
+    "@types/mocha": "^2.2.44",
     "@types/morgan": "^1.7.35",
     "@types/node-fetch": "^1.6.7",
     "@types/reflect-metadata": "0.0.5",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "ts-node": "^3.3.0",
     "typescript": "^2.5.3"
   }
 }

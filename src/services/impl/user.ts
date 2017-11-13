@@ -1,4 +1,3 @@
-import UserModel from '../../models/user'
 import {AmqpService, UserService} from '../index'
 import {inject, injectable} from '../../annotations/di'
 import BaseService from './common/base'
@@ -6,11 +5,13 @@ import * as c from 'config'
 import Pathes from '../../enums/pathes'
 import fetch from 'node-fetch'
 import UserDto from '../../dtos/user'
+import {UserRepository} from '../../repositories/index'
 
 @injectable('UserService')
 export default class DefaultUserService extends BaseService implements UserService {
   
   private amqpService: AmqpService
+  private userRepository: UserRepository
   
   async postConstruct() {
     await this.testAmqp()
@@ -21,8 +22,13 @@ export default class DefaultUserService extends BaseService implements UserServi
     this.amqpService = amqpService
   }
   
+  @inject('UserRepository')
+  setUserRepository(userRepository: UserRepository) {
+    this.userRepository = userRepository
+  }
+  
   async createUser() {
-    const userModel = new UserModel()
+    const userModel = this.userRepository.create()
     userModel.name = Math.random()
                          .toString()
     await userModel.save()
@@ -35,7 +41,7 @@ export default class DefaultUserService extends BaseService implements UserServi
   }
   
   listApi() {
-    return UserModel.getAll()
+    return this.userRepository.getAll()
   }
   
   private async testAmqp() {

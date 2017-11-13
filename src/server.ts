@@ -79,6 +79,11 @@ export class Server {
     
     // register services
     await autoImport(
+      path.join(__dirname, 'repositories', 'impl')
+    )
+    
+    // register services
+    await autoImport(
       path.join(__dirname, 'services', 'impl')
     )
     
