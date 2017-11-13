@@ -8,6 +8,7 @@ import autoImport from './utils/auto-import'
 import {injectionList, injectorList} from './annotations/di'
 import {router} from './annotations/controller'
 import * as c from 'config'
+import {SequelizeConfig} from 'sequelize-typescript/lib/types/SequelizeConfig'
 import DBMigrate = require('db-migrate')
 import cookieParser = require('cookie-parser')
 import errorHandler = require('errorhandler')
@@ -75,13 +76,9 @@ export class Server {
     
     if (dbConfig) {
       new Sequelize({
-                      host: c.get<string>('db.host'),
-                      database: c.get<string>('db.database'),
-                      dialect: 'postgres',
-                      username: c.get<string>('db.user'),
-                      password: c.get<string>('db.password'),
+                      ...dbConfig,
                       modelPaths: [path.join(__dirname, 'models')]
-                    })
+                    } as SequelizeConfig)
       
     }
     
