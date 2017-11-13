@@ -32,8 +32,11 @@ export class Server {
   }
   
   private async migration() {
-    const migration = (DBMigrate as any).getInstance(true, {config: {dev: c.get('db')}})
-    await migration.up()
+    const dbConfig = c.get('db')
+    if (dbConfig) {
+      const migration = (DBMigrate as any).getInstance(true, {config: {dev: dbConfig}})
+      await migration.up()
+    }
   }
   
   private async config() {
@@ -68,14 +71,19 @@ export class Server {
     //error handling
     this.app.use(errorHandler() as any)
     
-    new Sequelize({
-                    host: c.get<string>('db.host'),
-                    database: c.get<string>('db.database'),
-                    dialect: 'postgres',
-                    username: c.get<string>('db.user'),
-                    password: c.get<string>('db.password'),
-                    modelPaths: [path.join(__dirname, 'models')]
-                  })
+    const dbConfig = c.get('db')
+    
+    if (dbConfig) {
+      new Sequelize({
+                      host: c.get<string>('db.host'),
+                      database: c.get<string>('db.database'),
+                      dialect: 'postgres',
+                      username: c.get<string>('db.user'),
+                      password: c.get<string>('db.password'),
+                      modelPaths: [path.join(__dirname, 'models')]
+                    })
+      
+    }
     
     // register services
     await autoImport(

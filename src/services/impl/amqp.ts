@@ -72,7 +72,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   }
   
   private setupExchanges() {
-    const providerList: any = c.get('amqp.provider')
+    const providerList: any = c.get('amqp.provider') || {}
     return Promise.all(
       Object.keys(providerList)
             .map(async it => {
@@ -85,7 +85,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   }
   
   private setupQueues() {
-    const consumerList: any = c.get('amqp.consumer')
+    const consumerList: any = c.get('amqp.consumer') || {}
     return Promise.all(
       Object.keys(consumerList)
             .map(async it => {
