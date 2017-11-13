@@ -18,7 +18,15 @@ const walkSync = (dir: string) => {
 
 const autoImport = (folder: string, filter: (file: string) => boolean = it => !!it) => {
   return Promise.all(walkSync(folder)
-                       .filter(it => !it.includes('.map') && it.includes('.js'))
+                       .filter(
+                         it =>
+                           // exclude mappings
+                           !it.includes('.map') &&
+                           // exclude test
+                           !it.includes('.spec') &&
+                           // only js files
+                           it.includes('.js')
+                       )
                        .filter(filter)
                        .map(it => import(it)))
 }

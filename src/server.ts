@@ -82,25 +82,7 @@ export class Server {
       
     }
     
-    // register services
-    await autoImport(
-      path.join(__dirname, 'repositories', 'impl')
-    )
-    
-    // register services
-    await autoImport(
-      path.join(__dirname, 'services', 'impl')
-    )
-    
-    // register controllers
-    await autoImport(
-      path.join(__dirname, 'controllers')
-    )
-    
-    // register listeners
-    await autoImport(
-      path.join(__dirname, 'listeners')
-    )
+    await autoImport(__dirname)
     
     // inject
     injectorList.forEach(setter => setter())
