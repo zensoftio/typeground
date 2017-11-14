@@ -13,6 +13,7 @@ import {
 } from 'amqp'
 import {injectable} from '../../annotations/di'
 import * as c from 'config'
+import HttpException from '../../exceptions/http-exception'
 
 @injectable('AmqpService')
 export default class DefaultAmqpService extends BaseService implements AmqpService {
@@ -23,7 +24,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   
   constructor() {
     super()
-    if (c.get('amqp')) {
+    if (c.has('amqp')) {
       this.init()
     }
   }
@@ -63,6 +64,9 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   private async init() {
     this.exchangeList = new Map()
     this.queueList = new Map()
+    if (!c.has('amqp.connection')) {
+      throw new HttpException(404, 'No configuration for amqp was found!')
+    }
     this.connection = createConnection(c.get('amqp.connection'))
     this.ready = new Promise((resolve, reject) => {
       this.connection.on('ready', resolve)
@@ -72,7 +76,11 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   }
   
   private setupExchanges() {
-    const providerList: any = c.get('amqp.provider') || {}
+    let amqpProvider
+    if (c.has('amqp.provider')) {
+      amqpProvider = c.get('amqp.provider')
+    }
+    const providerList: any = amqpProvider || {}
     return Promise.all(
       Object.keys(providerList)
             .map(async it => {
@@ -85,7 +93,11 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   }
   
   private setupQueues() {
-    const consumerList: any = c.get('amqp.consumer') || {}
+    let amqpConsumer
+    if (c.has('amqp.consumer')) {
+      amqpConsumer = c.get('amqp.consumer')
+    }
+    const consumerList: any = amqpConsumer || {}
     return Promise.all(
       Object.keys(consumerList)
             .map(async it => {

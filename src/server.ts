@@ -34,8 +34,7 @@ export class Server {
   
   private async migration() {
     if (c.has('db')) {
-      const dbConfig = c.get('db')
-      const migration = (DBMigrate as any).getInstance(true, {config: {dev: dbConfig}})
+      const migration = (DBMigrate as any).getInstance(true, {config: {dev: c.get('db')}})
       await migration.up()
     }
   }
@@ -73,11 +72,11 @@ export class Server {
     this.app.use(errorHandler() as any)
     
     if (c.has('db')) {
-      const dbConfig = c.get('db')
-      new Sequelize({
-                      ...dbConfig,
-                      modelPaths: [path.join(__dirname, 'models')]
-                    } as SequelizeConfig)
+      new Sequelize(
+        {
+          ...c.get('db'),
+          modelPaths: [path.join(__dirname, 'models')]
+        } as SequelizeConfig)
     }
     
     await autoImport(__dirname)
