@@ -90,10 +90,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   }
   
   private setupQueues() {
-    let amqpConsumer
-    if (c.has('amqp.consumer')) {
-      amqpConsumer = c.get('amqp.consumer')
-    }
+    const amqpConsumer = c.has('amqp.consumer') ? c.get('amqp.consumer') : null
     const consumerList: any = amqpConsumer || {}
     return Promise.all(
       Object.keys(consumerList)
