@@ -65,7 +65,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
     this.exchangeList = new Map()
     this.queueList = new Map()
     if (!c.has('amqp.connection')) {
-      throw new HttpException(404, 'No configuration for amqp was found!')
+      throw new HttpException(500, 'No configuration for amqp was found!')
     }
     this.connection = createConnection(c.get('amqp.connection'))
     this.ready = new Promise((resolve, reject) => {
@@ -76,10 +76,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   }
   
   private setupExchanges() {
-    let amqpProvider
-    if (c.has('amqp.provider')) {
-      amqpProvider = c.get('amqp.provider')
-    }
+    const amqpProvider = c.has('amqp.provider') ? c.get('amqp.provider') : null
     const providerList: any = amqpProvider || {}
     return Promise.all(
       Object.keys(providerList)
