@@ -13,7 +13,7 @@ import {
 } from 'amqp'
 import {injectable} from '../../annotations/di'
 import * as c from 'config'
-import HttpException from '../../exceptions/http-exception'
+import HttpInternalErrorException from '../../exceptions/http-internal-error'
 
 @injectable('AmqpService')
 export default class DefaultAmqpService extends BaseService implements AmqpService {
@@ -65,7 +65,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
     this.exchangeList = new Map()
     this.queueList = new Map()
     if (!c.has('amqp.connection')) {
-      throw new HttpException(500, 'No configuration for amqp was found!')
+      throw new HttpInternalErrorException('No configuration for amqp was found!')
     }
     this.connection = createConnection(c.get('amqp.connection'))
     this.ready = new Promise((resolve, reject) => {

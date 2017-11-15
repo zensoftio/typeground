@@ -46,14 +46,13 @@ export default class DefaultUserService extends BaseService implements UserServi
   
   private async testAmqp() {
     if (c.has('amqp.provider.test.exchange') && c.has('amqp.provider.test.routingKey')) {
-      return
+      await this.amqpService.sendMessage(
+        c.get('amqp.provider.test.exchange'),
+        c.get('amqp.provider.test.routingKey'),
+        {message: 'some test'},
+        {}
+      )
     }
-    await this.amqpService.sendMessage(
-      c.get('amqp.provider.test.exchange'),
-      c.get('amqp.provider.test.routingKey'),
-      {message: 'some test'},
-      {}
-    )
   }
   
 }
