@@ -1,4 +1,3 @@
-import * as c from 'config'
 import {amqp, listener} from '../annotations/listener'
 import {Ack, DeliveryInfo} from 'amqp'
 import {AmqpService} from '../services/index'
@@ -23,7 +22,7 @@ export default class AmqpListener {
   }
   
   // SubscribeCallback
-  @amqp(c.get('amqp.consumer.test.queue'))
+  @amqp('amqp.consumer.test.queue')
   test = (message: any, headers: { [key: string]: any }, deliveryInfo: DeliveryInfo, ack: Ack) => {
     console.log(message, headers, deliveryInfo)
     ack.acknowledge(true)
