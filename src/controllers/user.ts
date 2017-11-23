@@ -3,6 +3,7 @@ import {controller, httpGet, httpPost} from '../annotations/controller'
 import {UserService} from '../services/index'
 import {inject} from '../annotations/di'
 import Pathes from '../enums/pathes'
+import UserDto from '../dtos/user'
 
 @controller
 export default class UserController extends BaseController {
@@ -16,7 +17,7 @@ export default class UserController extends BaseController {
   
   @httpPost(Pathes.User.New)
   // req: Request, res: Response, next: NextFunction
-  protected index = async () => {
+  protected index = async (): UserDto => {
     const userModel = await this.userService.createUser()
     
     return userModel.toJSON()
