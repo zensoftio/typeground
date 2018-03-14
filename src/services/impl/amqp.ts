@@ -13,7 +13,7 @@ import {
 } from 'amqp'
 import {injectable} from '../../annotations/di'
 import * as c from 'config'
-import HttpInternalErrorException from '../../exceptions/http-internal-error'
+import {StartUpException} from '../../exceptions/common'
 
 @injectable('AmqpService')
 export default class DefaultAmqpService extends BaseService implements AmqpService {
@@ -21,14 +21,14 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   private ready: Promise<any>
   private exchangeList: Map<string, AMQPExchange>
   private queueList: Map<string, AMQPQueue>
-  
+
   constructor() {
     super()
     if (c.has('amqp')) {
       this.init()
     }
   }
-  
+
   async sendMessage(exchangeName: string, routingKey: string, message: any, options: ExchangePublishOptions) {
     return this.ready.then(() => {
       const exchange = this.exchangeList.get(exchangeName)
@@ -42,7 +42,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
       ) : Promise.reject(`no exchange for name '${exchangeName}'`)
     })
   }
-  
+
   subscribe(queueName: string, handler: SubscribeCallback) {
     return this.ready.then(() => {
       const queue = this.queueList.get(queueName)
@@ -52,20 +52,20 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
       return queue.subscribe(handler)
     })
   }
-  
+
   private newExchange(exchangeName: string, options: ExchangeOptions): Promise<AMQPExchange> {
     return new Promise(resolve => this.connection.exchange(exchangeName, options, resolve as Callback<void>))
   }
-  
+
   private newQueue(queueName: string, options: QueueOptions): Promise<AMQPQueue> {
     return new Promise(resolve => this.connection.queue(queueName, options, (queue: any) => resolve(queue)))
   }
-  
+
   private async init() {
     this.exchangeList = new Map()
     this.queueList = new Map()
     if (!c.has('amqp.connection')) {
-      throw new HttpInternalErrorException('No configuration for amqp was found!')
+      throw new StartUpException('No configuration for amqp was found!')
     }
     this.connection = createConnection(c.get('amqp.connection'))
     this.ready = new Promise((resolve, reject) => {
@@ -74,7 +74,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
     }).then(() => this.setupExchanges())
       .then(() => this.setupQueues())
   }
-  
+
   private setupExchanges() {
     const amqpProvider = c.has('amqp.provider') ? c.get('amqp.provider') : null
     const providerList: any = amqpProvider || {}
@@ -88,7 +88,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
             })
     )
   }
-  
+
   private setupQueues() {
     const amqpConsumer = c.has('amqp.consumer') ? c.get('amqp.consumer') : null
     const consumerList: any = amqpConsumer || {}

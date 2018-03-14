@@ -5,28 +5,28 @@ import * as c from 'config'
 import Pathes from '../../enums/pathes'
 import fetch from 'node-fetch'
 import UserDto from '../../dtos/user'
-import {UserRepository} from '../../repositories/index'
+import {UserRepository} from '../../repositories'
 
 @injectable('UserService')
 export default class DefaultUserService extends BaseService implements UserService {
-  
+
   private amqpService: AmqpService
   private userRepository: UserRepository
-  
+
   async postConstruct() {
     await this.testAmqp()
   }
-  
+
   @inject('AmqpService')
   setAmqpService(amqpService: AmqpService) {
     this.amqpService = amqpService
   }
-  
+
   @inject('UserRepository')
   setUserRepository(userRepository: UserRepository) {
     this.userRepository = userRepository
   }
-  
+
   async createUser() {
     const userModel = this.userRepository.create()
     userModel.name = Math.random()
@@ -34,16 +34,16 @@ export default class DefaultUserService extends BaseService implements UserServi
     await userModel.save()
     return userModel
   }
-  
+
   async list() {
     const all = await fetch(`http://localhost:8080${Pathes.User.ListApi}`)
     return await all.json<UserDto[]>()
   }
-  
+
   listApi() {
     return this.userRepository.getAll()
   }
-  
+
   private async testAmqp() {
     if (c.has('amqp.provider.test.exchange') && c.has('amqp.provider.test.routingKey')) {
       await this.amqpService.sendMessage(
@@ -54,5 +54,5 @@ export default class DefaultUserService extends BaseService implements UserServi
       )
     }
   }
-  
+
 }
