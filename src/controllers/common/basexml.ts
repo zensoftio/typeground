@@ -6,8 +6,6 @@ import {httpErrorHandler} from '../../error-handlers/http'
 
 export class BaseXmlController implements Controller {
 
-  protected static handlers: { path: string, key: string, method: string }[] = []
-
   errorHandler = httpErrorHandler
 
   constructor() {
@@ -27,6 +25,6 @@ export class BaseXmlController implements Controller {
   }
 
   bindRouter() {
-    routerBind(router, BaseXmlController.handlers, this)
+    routerBind(router, this)
   }
 }

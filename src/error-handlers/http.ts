@@ -13,7 +13,7 @@ const baseFilter: HandlerFilter<Error> = {
   handler: e => new HttpInternalError(e.message || e)
 }
 
-const handlers: HandlerFilter<any>[] = [
+const errorHandlers: HandlerFilter<any>[] = [
   {
     filter: e => e instanceof HttpException,
     handler: e => e as HttpException
@@ -30,6 +30,6 @@ const handlers: HandlerFilter<any>[] = [
 ]
 
 export const httpErrorHandler = (error: Error): HttpException => {
-  const {handler} = handlers.find(it => it.filter(error)) || baseFilter
+  const {handler} = errorHandlers.find(it => it.filter(error)) || baseFilter
   return handler(error)
 }

@@ -8,7 +8,7 @@ export class DefaultUserRepository implements UserRepository {
   async getAll() {
     return await UserModel.all<UserModel>()
   }
-  
+
   create(values?: any, options?: IBuildOptions) {
     return new UserModel(values, options)
   }
