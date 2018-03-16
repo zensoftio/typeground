@@ -20,8 +20,8 @@ export const amqp = (queueNameConfigValue: string) => (target: any, handler: str
 }
 
 export const bind = (instance: any) => {
-  Reflect.get(instance.constructor.prototype, HANDLER_LISTENER_LIST)
-         .forEach(
-           (it: any) => instance.amqpService.subscribe(it.queueName, (instance as any)[it.handler])
-         )
+  (Reflect.get(instance.constructor.prototype, HANDLER_LISTENER_LIST) || [])
+    .forEach(
+      (it: any) => instance.amqpService.subscribe(it.queueName, (instance as any)[it.handler])
+    )
 }

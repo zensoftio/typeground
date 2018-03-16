@@ -33,10 +33,10 @@ export class Server {
   }
 
   private async migration() {
-    // if (c.has('db')) {
-    //   const migration = (DBMigrate as any).getInstance(true, {config: {dev: c.get('db')}})
-    //   await migration.up()
-    // }
+    if (c.has('db')) {
+      const migration = (DBMigrate as any).getInstance(true, {config: {dev: c.get('db')}})
+      await migration.up()
+    }
   }
 
   private async config() {
@@ -71,13 +71,13 @@ export class Server {
     //error handling
     this.app.use(errorHandler() as any)
 
-    // if (c.has('db')) {
-    //   new Sequelize(
-    //     {
-    //       ...c.get('db'),
-    //       modelPaths: [path.join(__dirname, 'models')]
-    //     } as SequelizeConfig)
-    // }
+    if (c.has('db')) {
+      new Sequelize(
+        {
+          ...c.get('db'),
+          modelPaths: [path.join(__dirname, 'models')]
+        } as SequelizeConfig)
+    }
 
     await autoImport(__dirname)
 
