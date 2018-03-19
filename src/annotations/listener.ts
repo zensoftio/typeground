@@ -11,17 +11,18 @@ export const amqp = (queueNameConfigValue: string) => (target: any, handler: str
   }
   const queueName = c.get(queueNameConfigValue)
 
-  if (!Reflect.get(target, HANDLER_LISTENER_LIST)) {
-    Reflect.set(target, HANDLER_LISTENER_LIST, [])
+  if (!Reflect.hasMetadata(HANDLER_LISTENER_LIST, target)) {
+    Reflect.defineMetadata(HANDLER_LISTENER_LIST, [], target)
   }
 
-  const handlerList = Reflect.get(target, HANDLER_LISTENER_LIST)
+  const handlerList = Reflect.getMetadata(HANDLER_LISTENER_LIST, target)
   handlerList.push({queueName: queueName, handler})
 }
 
 export const bind = (instance: any) => {
-  (Reflect.get(instance.constructor.prototype, HANDLER_LISTENER_LIST) || [])
-    .forEach(
-      (it: any) => instance.amqpService.subscribe(it.queueName, (instance as any)[it.handler])
-    )
+  Reflect.hasMetadata(HANDLER_LISTENER_LIST, instance) &&
+  Reflect.getMetadata(HANDLER_LISTENER_LIST, instance)
+         .forEach(
+           (it: any) => instance.amqpService.subscribe(it.queueName, (instance as any)[it.handler])
+         )
 }

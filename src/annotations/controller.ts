@@ -6,10 +6,10 @@ import Controller from '../controllers/common'
 const HANDLER_LIST = Symbol('handler_list')
 
 const http = (method: string) => (path: string) => (target: any, key: string) => {
-  if (!Reflect.get(target, HANDLER_LIST)) {
-    Reflect.set(target, HANDLER_LIST, [])
+  if (!Reflect.hasMetadata(HANDLER_LIST, target)) {
+    Reflect.defineMetadata(HANDLER_LIST, [], target)
   }
-  const handlerList = Reflect.get(target, HANDLER_LIST)
+  const handlerList = Reflect.getMetadata(HANDLER_LIST, target)
   handlerList.push({path, key, method, filter: target.constructor.name})
 }
 
@@ -34,7 +34,7 @@ export const router = Router()
 export const controller = (constructor: any) => injectable(constructor.name)(constructor)
 
 export const routerBind = (router: any, controller: Controller) =>
-  Reflect.get(controller.constructor.prototype, HANDLER_LIST)
+  Reflect.getMetadata(HANDLER_LIST, controller)
          .filter(({filter}: { filter: any }) => filter === controller.constructor.name)
          .forEach(
            (it: any) => router[it.method](

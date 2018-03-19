@@ -17,13 +17,13 @@ class AttributeDefinition {
 }
 
 export const attr = (options?: Function | AttributeDefinitionOptions) => (target: Object, propertyKey: string | symbol) => {
-  if (!Reflect.get(target, ATTRIBUTE_LIST)) {
-    Reflect.set(target, ATTRIBUTE_LIST, [])
+  if (!Reflect.hasMetadata(ATTRIBUTE_LIST, target)) {
+    Reflect.defineMetadata(ATTRIBUTE_LIST, [], target)
   }
 
   const type = options instanceof Function ? options : options && options.type
 
-  const attributeList = Reflect.get(target, ATTRIBUTE_LIST)
+  const attributeList = Reflect.getMetadata(ATTRIBUTE_LIST, target)
 
   attributeList.push(new AttributeDefinition(
     Reflect.getMetadata('design:type', target, propertyKey),
@@ -89,7 +89,7 @@ const checkProperty = (json: any, attribute: AttributeDefinition, constructor: F
 }
 
 export const checkJson = (json: any = {}, constructor: Function) => {
-  const attributeList: AttributeDefinition[] = Reflect.get(constructor.prototype, ATTRIBUTE_LIST)
+  const attributeList: AttributeDefinition[] = Reflect.getMetadata(ATTRIBUTE_LIST, constructor)
   return attributeList.map(attribute => checkProperty(json[attribute.name], attribute, constructor))
 }
 
@@ -108,7 +108,7 @@ const instantiateProperty = (json: any, attribute: AttributeDefinition, construc
 }
 
 export const instantiateJson = <T>(json: any = {}, constructor: any): T => {
-  const attributeList: AttributeDefinition[] = Reflect.get(constructor.prototype, ATTRIBUTE_LIST)
+  const attributeList: AttributeDefinition[] = Reflect.getMetadata(ATTRIBUTE_LIST, constructor)
   const instance = new constructor()
   attributeList.forEach(
     attribute => instance[attribute.name] = instantiateProperty(json[attribute.name], attribute, constructor)
