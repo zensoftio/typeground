@@ -11,11 +11,11 @@ import {
   QueueOptions,
   SubscribeCallback
 } from 'amqp'
-import {injectable} from '../../annotations/di'
+import {ComponentByName} from '../../annotations/di'
 import * as c from 'config'
 import {StartUpException} from '../../exceptions/common'
 
-@injectable('AmqpService')
+@ComponentByName('AmqpService')
 export default class DefaultAmqpService extends BaseService implements AmqpService {
   private connection: AMQPClient
   private ready: Promise<any>

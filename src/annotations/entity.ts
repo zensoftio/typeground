@@ -16,7 +16,7 @@ class AttributeDefinition {
   }
 }
 
-export const attr = (options?: Function | AttributeDefinitionOptions) => (target: Object, propertyKey: string | symbol) => {
+export const Attr = (options?: Function | AttributeDefinitionOptions) => (target: Object, propertyKey: string | symbol) => {
   if (!Reflect.hasMetadata(ATTRIBUTE_LIST, target)) {
     Reflect.defineMetadata(ATTRIBUTE_LIST, [], target)
   }

@@ -1,9 +1,9 @@
 import UserModel from '../../models/user'
 import {UserRepository} from '../index'
-import {injectable} from '../../annotations/di'
+import {ComponentByName} from '../../annotations/di'
 import {IBuildOptions} from 'sequelize-typescript'
 
-@injectable('UserRepository')
+@ComponentByName('UserRepository')
 export class DefaultUserRepository implements UserRepository {
   async getAll() {
     return await UserModel.all<UserModel>()

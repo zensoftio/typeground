@@ -1,14 +1,14 @@
-import {amqp, bind, listener} from '../annotations/listener'
+import {Amqp, bind, Listener} from '../annotations/listener'
 import {Ack, DeliveryInfo} from 'amqp'
 import {AmqpService} from '../services'
-import {inject} from '../annotations/di'
+import {Autowired} from '../annotations/di'
 
-@listener
+@Listener
 export default class AmqpListener {
 
   private amqpService: AmqpService
 
-  @inject('AmqpService')
+  @Autowired('AmqpService')
   setAmqpService(amqpService: AmqpService) {
     this.amqpService = amqpService
   }
@@ -18,7 +18,7 @@ export default class AmqpListener {
   }
 
   // SubscribeCallback
-  @amqp('amqp.consumer.test.queue')
+  @Amqp('amqp.consumer.test.queue')
   test = (message: any, headers: { [key: string]: any }, deliveryInfo: DeliveryInfo, ack: Ack) => {
     console.log(message, headers, deliveryInfo)
     ack.acknowledge(true)

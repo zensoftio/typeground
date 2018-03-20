@@ -1,11 +1,11 @@
-import {controller} from './controller'
+import {Component} from './di'
 import * as c from 'config'
 
 const HANDLER_LISTENER_LIST = Symbol('handler_listener_list')
 
-export const listener = controller
+export const Listener = Component
 
-export const amqp = (queueNameConfigValue: string) => (target: any, handler: string) => {
+export const Amqp = (queueNameConfigValue: string) => (target: any, handler: string) => {
   if (!c.has(queueNameConfigValue)) {
     return
   }

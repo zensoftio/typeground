@@ -1,37 +1,43 @@
 import 'reflect-metadata'
 import {NextFunction, Request, Response, Router} from 'express'
-import {injectable} from './di'
+import {Component} from './di'
 import Controller from '../controllers/common'
 
 const HANDLER_LIST = Symbol('handler_list')
+const BASE_PATH = Symbol('base_path')
 
-const http = (method: string) => (path: string) => (target: any, key: string) => {
+const mapping = (method: string) => (path: string) => (target: any, key: string) => {
   if (!Reflect.hasMetadata(HANDLER_LIST, target)) {
     Reflect.defineMetadata(HANDLER_LIST, [], target)
   }
+  const basePath = Reflect.getMetadata(BASE_PATH, target) || ''
   const handlerList = Reflect.getMetadata(HANDLER_LIST, target)
-  handlerList.push({path, key, method, filter: target.constructor.name})
+  handlerList.push({path: `${basePath}${path}`, key, method, filter: target.constructor.name})
 }
 
-export const httpGet = http('get')
+const RequestMapping = (path: string) => (target: any) => {
+  Reflect.defineMetadata(BASE_PATH, path, target)
+}
 
-export const httpPost = http('post')
+export const GetMapping = mapping('get')
 
-export const httpPut = http('put')
+export const PostMapping = mapping('post')
 
-export const httpDelete = http('delete')
+export const PutMapping = mapping('put')
 
-export const httpPatch = http('patch')
+export const DeleteMapping = mapping('delete')
 
-export const httpOptions = http('options')
+export const PatchMapping = mapping('patch')
 
-export const httpHead = http('head')
+export const OptionsMapping = mapping('options')
 
-export const httpAll = http('all')
+export const HeadMapping = mapping('head')
+
+export const AllMapping = mapping('all')
 
 export const router = Router()
 
-export const controller = (constructor: any) => injectable(constructor.name)(constructor)
+export const RestController = Component
 
 export const routerBind = (router: any, controller: Controller) =>
   Reflect.getMetadata(HANDLER_LIST, controller)

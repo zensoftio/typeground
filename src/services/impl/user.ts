@@ -1,5 +1,5 @@
 import {AmqpService, UserService} from '../index'
-import {inject, injectable} from '../../annotations/di'
+import {Autowired, ComponentByName} from '../../annotations/di'
 import BaseService from './common/base'
 import * as c from 'config'
 import Pathes from '../../enums/pathes'
@@ -7,7 +7,7 @@ import fetch from 'node-fetch'
 import UserDto from '../../dtos/user'
 import {UserRepository} from '../../repositories'
 
-@injectable('UserService')
+@ComponentByName('UserService')
 export default class DefaultUserService extends BaseService implements UserService {
 
   private amqpService: AmqpService
@@ -17,12 +17,12 @@ export default class DefaultUserService extends BaseService implements UserServi
     await this.testAmqp()
   }
 
-  @inject('AmqpService')
+  @Autowired('AmqpService')
   setAmqpService(amqpService: AmqpService) {
     this.amqpService = amqpService
   }
 
-  @inject('UserRepository')
+  @Autowired('UserRepository')
   setUserRepository(userRepository: UserRepository) {
     this.userRepository = userRepository
   }

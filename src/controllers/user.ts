@@ -1,36 +1,33 @@
 import {BaseController} from './common/base'
-import {controller, httpGet, httpPost} from '../annotations/controller'
+import {RestController, GetMapping, PostMapping} from '../annotations/controller'
 import {UserService} from '../services'
-import {inject} from '../annotations/di'
+import {Autowired} from '../annotations/di'
 import Pathes from '../enums/pathes'
 import UserDto from '../dtos/user'
 
-@controller
+@RestController
 export default class UserController extends BaseController {
 
   private userService: UserService
 
-  @inject('UserService')
+  @Autowired('UserService')
   setUserService(userService: UserService) {
     this.userService = userService
   }
 
-  @httpPost(Pathes.User.New)
-  // req: Request, res: Response, next: NextFunction
+  @PostMapping(Pathes.User.New)
   protected index = async (): Promise<UserDto> => {
     const userModel = await this.userService.createUser()
 
     return userModel.toJSON()
   }
 
-  @httpGet(Pathes.User.List)
-  // req: Request, res: Response, next: NextFunction
+  @GetMapping(Pathes.User.List)
   protected list = async () => {
     return await this.userService.list()
   }
 
-  @httpGet(Pathes.User.ListApi)
-  // req: Request, res: Response, next: NextFunction
+  @GetMapping(Pathes.User.ListApi)
   protected listApi = async () => {
     const userModelList = await this.userService.listApi()
 

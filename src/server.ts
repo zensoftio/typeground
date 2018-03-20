@@ -81,7 +81,7 @@ export class Server {
 
     await autoImport(__dirname)
 
-    // inject
+    // Inject
     injectorList.forEach(setter => setter())
     injectionList.forEach(it => it.postConstruct ? it.postConstruct() : null)
 
