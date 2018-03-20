@@ -1,10 +1,10 @@
 import * as express from 'express'
-import {router, routerBind} from '../../annotations/controller'
-import {HttpException} from '../../exceptions/http'
+import {router, routerBind} from '../annotations/controller'
+import {HttpException} from '../exceptions/http'
 import Controller from './index'
 import {httpErrorHandler} from '../../error-handlers/http'
 
-export class BaseXmlController implements Controller {
+export class BaseController implements Controller {
 
   errorHandler = httpErrorHandler
 
@@ -13,15 +13,13 @@ export class BaseXmlController implements Controller {
   }
 
   response(res: express.Response, options: any) {
-    res.type('text/xml')
     res.status(200)
-    res.send(options)
+    res.json(options)
   }
 
   error(res: express.Response, error: HttpException) {
-    res.type('text/xml')
     res.status(error.status)
-    res.send(error.message)
+    res.json(error.message)
   }
 
   bindRouter() {

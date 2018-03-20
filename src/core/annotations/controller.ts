@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import {NextFunction, Request, Response, Router} from 'express'
 import {Component} from './di'
-import Controller from '../controllers/common'
+import Controller from '../controller/index'
 
 const HANDLER_LIST = Symbol('handler_list')
 const BASE_PATH = Symbol('base_path')

@@ -1,5 +1,5 @@
 import {Response} from 'express'
-import {HttpException} from '../../exceptions/http'
+import {HttpException} from '../exceptions/http'
 
 export default interface Controller {
   errorHandler: (e: Error) => HttpException

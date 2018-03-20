@@ -1,4 +1,4 @@
-import BaseService from './common/base'
+import BaseService from '../../core/service/base'
 import {AmqpService} from '../index'
 import {
   AMQPClient,
@@ -11,9 +11,9 @@ import {
   QueueOptions,
   SubscribeCallback
 } from 'amqp'
-import {ComponentByName} from '../../annotations/di'
+import {ComponentByName} from '../../core/annotations/di'
 import * as c from 'config'
-import {StartUpException} from '../../exceptions/common'
+import {StartUpException} from '../../core/exceptions/common'
 
 @ComponentByName('AmqpService')
 export default class DefaultAmqpService extends BaseService implements AmqpService {

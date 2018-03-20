@@ -1,5 +1,5 @@
-import {HttpAuthFailedError, HttpAuthNotFoundError, HttpException, HttpInternalError} from '../exceptions/http'
-import {AuthFailedException, AuthNotFoundException} from '../exceptions/auth'
+import {HttpAuthFailedError, HttpAuthNotFoundError, HttpException, HttpInternalError} from '../core/exceptions/http'
+import {AuthFailedException, AuthNotFoundException} from '../core/exceptions/auth'
 
 type Handler<T extends Error> = (error: T) => HttpException
 

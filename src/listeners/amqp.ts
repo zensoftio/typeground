@@ -1,7 +1,7 @@
-import {Amqp, bind, Listener} from '../annotations/listener'
+import {Amqp, bind, Listener} from '../core/annotations/listener'
 import {Ack, DeliveryInfo} from 'amqp'
 import {AmqpService} from '../services'
-import {Autowired} from '../annotations/di'
+import {Autowired} from '../core/annotations/di'
 
 @Listener
 export default class AmqpListener {

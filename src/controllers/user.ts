@@ -1,7 +1,7 @@
-import {BaseController} from './common/base'
-import {RestController, GetMapping, PostMapping} from '../annotations/controller'
+import {BaseController} from '../core/controller/base'
+import {RestController, GetMapping, PostMapping} from '../core/annotations/controller'
 import {UserService} from '../services'
-import {Autowired} from '../annotations/di'
+import {Autowired} from '../core/annotations/di'
 import Pathes from '../enums/pathes'
 import UserDto from '../dtos/user'
 

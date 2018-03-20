@@ -7,27 +7,5 @@
     "database": "nick",
     "schema": "public",
     "dialect": "postgres"
-  },
-  "amqp": {
-    "connection": {
-      "host": "192.168.89.111",
-      "port": "5672",
-      "login": "goin",
-      "password": "Eish2Moh",
-      "vhost": "goin"
-    },
-    "provider": {
-      "test": {
-        "exchange": "exchange",
-        "routingKey": "routingKey"
-      }
-    },
-    "consumer": {
-      "test": {
-        "exchange": "exchange",
-        "routingKey": "routingKey",
-        "queue": "queue"
-      }
-    }
   }
 }

@@ -1,6 +1,6 @@
 import UserModel from '../../models/user'
 import {UserRepository} from '../index'
-import {ComponentByName} from '../../annotations/di'
+import {ComponentByName} from '../../core/annotations/di'
 import {IBuildOptions} from 'sequelize-typescript'
 
 @ComponentByName('UserRepository')

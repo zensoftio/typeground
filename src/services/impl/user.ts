@@ -1,6 +1,6 @@
 import {AmqpService, UserService} from '../index'
-import {Autowired, ComponentByName} from '../../annotations/di'
-import BaseService from './common/base'
+import {Autowired, ComponentByName} from '../../core/annotations/di'
+import BaseService from '../../core/service/base'
 import * as c from 'config'
 import Pathes from '../../enums/pathes'
 import fetch from 'node-fetch'
