@@ -2,9 +2,7 @@
 
 ## Start Project
 
-- `npm run clean`
-- `npm run tsc`
-- `node ./bin/www`
+- `npm start`
 
 ## Build using
 
