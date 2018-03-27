@@ -54,10 +54,10 @@ const parameterStrategyMap = {
     return req.body
   },
   params: (parameter: Parameter, req: Request) => {
-    return req.body[parameter.field] || req.params[parameter.field]
+    return req.params[parameter.field]
   },
   query: (parameter: Parameter, req: Request) => {
-    return req.query[parameter.field]
+    return req.body[parameter.field] || req.query[parameter.field]
   }
 }
 
