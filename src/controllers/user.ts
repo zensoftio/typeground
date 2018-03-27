@@ -10,7 +10,7 @@ import {
 import {UserService} from '../services'
 import {Autowired} from '../core/annotations/di'
 import Pathes from '../enums/pathes'
-import UserDto from '../dtos/user'
+import UserDto, {UserCreateDto} from '../dtos/user'
 
 @RestController
 export default class UserController extends BaseController {
@@ -23,11 +23,11 @@ export default class UserController extends BaseController {
   }
 
   @PostMapping(Pathes.User.New)
-  async index(@PathVariable('projectId') projectId: number,
-              @RequestParam('test') test: number,
-              @RequestBody('body') body: { some: number }): Promise<UserDto> {
-    console.log(projectId, test, body)
-    const userModel = await this.userService.createUser()
+  async index(@PathVariable('projectId', Number) projectId: number,
+              @RequestBody(UserCreateDto) userCreateDto: UserCreateDto,
+              @RequestParam('test', Number) test?: number): Promise<UserDto> {
+    console.log(projectId, test, userCreateDto)
+    const userModel = await this.userService.createUser(userCreateDto)
 
     return userModel.toJSON()
   }

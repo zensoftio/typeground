@@ -1,10 +1,10 @@
 import UserModel from '../models/user'
 import BaseService from '../core/service/base'
 import {ExchangePublishOptions, SubscribeCallback} from 'amqp'
-import UserDto from '../dtos/user'
+import UserDto, {UserCreateDto} from '../dtos/user'
 
 export interface UserService extends BaseService {
-  createUser(): Promise<UserModel>
+  createUser(userCreateDto: UserCreateDto): Promise<UserModel>
 
   list(): Promise<UserDto[]>
 

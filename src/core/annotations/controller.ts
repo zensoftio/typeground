@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import {NextFunction, Request, Response, Router} from 'express'
 import {Component} from './di'
 import Controller from '../controller/index'
+import {instantiateJson} from './entity'
 
 const HANDLER_LIST = Symbol('handler_list')
 const BASE_PATH = Symbol('base_path')
@@ -47,17 +48,18 @@ interface Parameter {
   method: string | symbol
   index: number
   type: 'body' | 'params' | 'query'
+  constructor: Function
 }
 
 const parameterStrategyMap = {
   body: (parameter: Parameter, req: Request) => {
-    return req.body
+    return instantiateJson(req.body, parameter.constructor)
   },
   params: (parameter: Parameter, req: Request) => {
-    return req.params[parameter.field]
+    return parameter.constructor(req.params[parameter.field])
   },
   query: (parameter: Parameter, req: Request) => {
-    return req.body[parameter.field] || req.query[parameter.field]
+    return parameter.constructor(req.body[parameter.field] || req.query[parameter.field])
   }
 }
 
@@ -66,11 +68,11 @@ const parameterStrategy = (parameter: Parameter, req: Request) => {
 }
 
 const getArgsFromMetadata = (controller: Controller) => {
-  const metadataParams = Reflect.getMetadata(REQUEST_PARAM, controller) || []
-  const metadataBody = Reflect.getMetadata(REQUEST_BODY, controller) || []
-  const metadataPath = Reflect.getMetadata(PATH_VARIABLES, controller) || []
-  return [].concat(metadataBody, metadataParams, metadataPath)
-           .sort(((a, b) => a < b ? -1 : 1))
+  const metadataParams: Parameter[] = Reflect.getMetadata(REQUEST_PARAM, controller) || []
+  const metadataBody: Parameter[] = Reflect.getMetadata(REQUEST_BODY, controller) || []
+  const metadataPath: Parameter[] = Reflect.getMetadata(PATH_VARIABLES, controller) || []
+  return ([] as Parameter[]).concat(metadataBody, metadataParams, metadataPath)
+                            .sort(((a, b) => a.index < b.index ? -1 : 1))
 }
 
 export const routerBind = (router: any, controller: Controller) =>
@@ -80,9 +82,9 @@ export const routerBind = (router: any, controller: Controller) =>
            (it: any) => router[it.method](
              it.path,
              async (req: Request, res: Response, next: NextFunction) => {
-               const metadata = getArgsFromMetadata(controller)
-               const args = metadata.map((it: Parameter) => parameterStrategy(it, req))
                try {
+                 const metadata = getArgsFromMetadata(controller)
+                 const args = metadata.map((it: Parameter) => parameterStrategy(it, req))
                  controller.response(res, await (controller as any)[it.key](...args))
                } catch (e) {
                  controller.error(res, controller.errorHandler(e))
@@ -92,14 +94,22 @@ export const routerBind = (router: any, controller: Controller) =>
          )
 
 const argAnnotation = (key: symbol, type: 'body' | 'params' | 'query') =>
-  (field: string) => (target: Object, method: string | symbol, index: number) => {
+  (field: string, constructor: Function) => (target: Object, method: string | symbol, index: number) => {
     if (!Reflect.getMetadata(key, target)) {
       Reflect.defineMetadata(key, [], target)
     }
     const metadata: Parameter[] = Reflect.getMetadata(key, target)
-    metadata.push({field, method, index, type})
+    metadata.push({field, method, index, type, constructor})
   }
 
 export const RequestParam = argAnnotation(REQUEST_PARAM, 'query')
-export const RequestBody = argAnnotation(REQUEST_BODY, 'body')
+
 export const PathVariable = argAnnotation(PATH_VARIABLES, 'params')
+
+export const RequestBody = (constructor: Function) => (target: Object, method: string | symbol, index: number) => {
+  if (!Reflect.getMetadata(REQUEST_BODY, target)) {
+    Reflect.defineMetadata(REQUEST_BODY, [], target)
+  }
+  const metadata: Parameter[] = Reflect.getMetadata(REQUEST_BODY, target)
+  metadata.push({field: '', method, index, type: 'body', constructor})
+}

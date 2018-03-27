@@ -4,7 +4,7 @@ import BaseService from '../../core/service/base'
 import * as c from 'config'
 import Pathes from '../../enums/pathes'
 import fetch from 'node-fetch'
-import UserDto from '../../dtos/user'
+import UserDto, {UserCreateDto} from '../../dtos/user'
 import {UserRepository} from '../../repositories'
 
 @ComponentByName('UserService')
@@ -27,10 +27,8 @@ export default class DefaultUserService extends BaseService implements UserServi
     this.userRepository = userRepository
   }
 
-  async createUser() {
-    const userModel = this.userRepository.create()
-    userModel.name = Math.random()
-                         .toString()
+  async createUser(userCreateDto: UserCreateDto) {
+    const userModel = this.userRepository.create(userCreateDto)
     await userModel.save()
     return userModel
   }

@@ -108,7 +108,7 @@ const instantiateProperty = (json: any, attribute: AttributeDefinition, construc
 }
 
 export const instantiateJson = <T>(json: any = {}, constructor: any): T => {
-  const attributeList: AttributeDefinition[] = Reflect.getMetadata(ATTRIBUTE_LIST, constructor)
+  const attributeList: AttributeDefinition[] = Reflect.getMetadata(ATTRIBUTE_LIST, constructor.prototype)
   const instance = new constructor()
   attributeList.forEach(
     attribute => instance[attribute.name] = instantiateProperty(json[attribute.name], attribute, constructor)
