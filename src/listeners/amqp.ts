@@ -19,7 +19,7 @@ export default class AmqpListener {
 
   // SubscribeCallback
   @Amqp('amqp.consumer.test.queue')
-  test = (message: any, headers: { [key: string]: any }, deliveryInfo: DeliveryInfo, ack: Ack) => {
+  test(message: any, headers: { [key: string]: any }, deliveryInfo: DeliveryInfo, ack: Ack) {
     console.log(message, headers, deliveryInfo)
     ack.acknowledge(true)
   }

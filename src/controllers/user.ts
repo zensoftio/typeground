@@ -1,5 +1,12 @@
 import {BaseController} from '../core/controller/base'
-import {RestController, GetMapping, PostMapping} from '../core/annotations/controller'
+import {
+  GetMapping,
+  PathVariable,
+  PostMapping,
+  RequestBody,
+  RequestParam,
+  RestController
+} from '../core/annotations/controller'
 import {UserService} from '../services'
 import {Autowired} from '../core/annotations/di'
 import Pathes from '../enums/pathes'
@@ -16,19 +23,22 @@ export default class UserController extends BaseController {
   }
 
   @PostMapping(Pathes.User.New)
-  protected index = async (): Promise<UserDto> => {
+  async index(@PathVariable('projectId') projectId: number,
+              @RequestParam('test') test: number,
+              @RequestBody('body') body: { some: number }): Promise<UserDto> {
+    console.log(projectId, test, body)
     const userModel = await this.userService.createUser()
 
     return userModel.toJSON()
   }
 
   @GetMapping(Pathes.User.List)
-  protected list = async () => {
-    return await this.userService.list()
+  list() {
+    return this.userService.list()
   }
 
   @GetMapping(Pathes.User.ListApi)
-  protected listApi = async () => {
+  async listApi() {
     const userModelList = await this.userService.listApi()
 
     return userModelList.map(it => it.toJSON())

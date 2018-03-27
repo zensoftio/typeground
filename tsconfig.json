@@ -4,7 +4,6 @@
     "module": "commonjs",
     "sourceMap": true,
     "strict": true,
-    "strictNullChecks": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",
