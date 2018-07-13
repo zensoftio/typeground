@@ -1,8 +1,9 @@
-import {Column, Model, Table} from 'sequelize-typescript'
+import { Column, Entity } from 'typeorm'
 
-@Table({tableName: 'users'})
-export default class UserModel extends Model<UserModel> {
+@Entity('users')
+export default class UserModel {
 
-  @Column
+  @Column({ type: 'varchar' })
   name: string
+
 }

@@ -1,8 +1,9 @@
+import { EntityManager } from 'typeorm'
 import UserModel from '../models/user'
-import {IBuildOptions} from 'sequelize-typescript'
+import { UserCreateDto } from '../dtos/user'
 
 export interface UserRepository {
-  getAll(): Promise<UserModel[]>
+  getAll(): Promise<UserModel[] | undefined>
 
-  create(values?: any, options?: IBuildOptions): UserModel
+  createEntity(dto: UserCreateDto, entityManager?: EntityManager): Promise<UserModel>
 }

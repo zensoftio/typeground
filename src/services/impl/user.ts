@@ -28,9 +28,7 @@ export default class DefaultUserService extends BaseService implements UserServi
   }
 
   async createUser(userCreateDto: UserCreateDto) {
-    const userModel = this.userRepository.create(userCreateDto)
-    await userModel.save()
-    return userModel
+    return await this.userRepository.createEntity(userCreateDto)
   }
 
   async list() {

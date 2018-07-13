@@ -1,15 +1,18 @@
+import { EntityManager, EntityRepository, Repository } from 'typeorm'
+import { UserRepository } from '../index'
+import { RepositoryByName } from '../../core/annotations/di'
+import { UserCreateDto } from '../../dtos/user'
 import UserModel from '../../models/user'
-import {UserRepository} from '../index'
-import {ComponentByName} from '../../core/annotations/di'
-import {IBuildOptions} from 'sequelize-typescript'
 
-@ComponentByName('UserRepository')
-export class DefaultUserRepository implements UserRepository {
-  async getAll() {
-    return await UserModel.all<UserModel>()
+@RepositoryByName('UserRepository')
+@EntityRepository(UserModel)
+export class DefaultUserRepository extends Repository<UserModel> implements UserRepository {
+  async getAll(): Promise<UserModel[] | undefined> {
+    return await this.find()
   }
 
-  create(values?: any, options?: IBuildOptions) {
-    return new UserModel(values, options)
+  createEntity(dto: UserCreateDto, entityManager?: EntityManager): Promise<UserModel> {
+    const entity = this.create(dto)
+    return entityManager ? entityManager.save(entity) : this.save(entity)
   }
 }

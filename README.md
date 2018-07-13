@@ -10,5 +10,5 @@
 - TypeScript
 - DB Migrate
 - config
-- Sequelize
+- Typeorm
 
