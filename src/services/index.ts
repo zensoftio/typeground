@@ -8,7 +8,7 @@ export interface UserService extends BaseService {
 
   list(): Promise<UserDto[]>
 
-  listApi(): Promise<UserModel[]>
+  listApi(): Promise<UserModel[] | undefined>
 }
 
 export interface AmqpService extends BaseService {

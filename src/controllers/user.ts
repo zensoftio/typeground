@@ -27,9 +27,7 @@ export default class UserController extends BaseController {
               @RequestBody(UserCreateDto) userCreateDto: UserCreateDto,
               @RequestParam('test', Number) test?: number): Promise<UserDto> {
     console.log(projectId, test, userCreateDto)
-    const userModel = await this.userService.createUser(userCreateDto)
-
-    return userModel.toJSON()
+    return await this.userService.createUser(userCreateDto)
   }
 
   @GetMapping(Pathes.User.List)
@@ -39,8 +37,6 @@ export default class UserController extends BaseController {
 
   @GetMapping(Pathes.User.ListApi)
   async listApi() {
-    const userModelList = await this.userService.listApi()
-
-    return userModelList.map(it => it.toJSON())
+    return await this.userService.listApi()
   }
 }

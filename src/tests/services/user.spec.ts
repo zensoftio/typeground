@@ -9,8 +9,8 @@ const defaultUserRepository = {
   getAll: function () {
     return Promise.resolve(this.getAllResult)
   },
-  create: function () {
-    return new UserModel()
+  createEntity: function () {
+    return Promise.resolve(new UserModel())
   }
 }
 

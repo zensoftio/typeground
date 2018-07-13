@@ -3,12 +3,11 @@ import * as bodyParser from 'body-parser'
 import * as express from 'express'
 import {Application, NextFunction} from 'express'
 import * as methodOverride from 'method-override'
-import {Sequelize} from 'sequelize-typescript'
+import { createConnection, ConnectionOptions } from 'typeorm'
 import autoImport from './core/utils/auto-import'
 import {injectionList, injectorList} from './core/annotations/di'
 import {router} from './core/annotations/controller'
 import * as c from 'config'
-import {SequelizeConfig} from 'sequelize-typescript/lib/types/SequelizeConfig'
 import DBMigrate = require('db-migrate')
 import cookieParser = require('cookie-parser')
 import errorHandler = require('errorhandler')
@@ -72,11 +71,21 @@ export class Server {
     this.app.use(errorHandler() as any)
 
     if (c.has('db')) {
-      new Sequelize(
-        {
-          ...c.get('db'),
-          modelPaths: [path.join(__dirname, 'models')]
-        } as SequelizeConfig)
+      const typeOrmConfigs: ConnectionOptions = {
+        type: 'postgres',
+        host: c.get('db.host'),
+        username: c.get('db.username'),
+        password: c.get('db.password'),
+        database: c.get('db.database'),
+        entities: ['dist/models/*.js'],
+        migrationsRun: false
+      }
+      await createConnection(typeOrmConfigs)
+        .then(connection => {
+          console.log('Connection has been established successfully.')
+          return connection
+        })
+        .catch(err => console.error('Unable to connect to the database:', err))
     }
 
     await autoImport(__dirname)
