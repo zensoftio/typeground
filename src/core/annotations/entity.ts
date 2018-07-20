@@ -42,15 +42,15 @@ const strategyGenerator = (entityResolver: (json: any, constructor: Function) =>
   return {
     Array: (json: any, attribute: AttributeDefinition, constructor: Function) => {
       if (!(json instanceof Array)) {
-        throw new Error(`${constructor.name}::${attribute.name} is not an Array`)
+        throw new Error(`${constructor.name}::${attribute.name.toString()} is not an Array`)
       }
       return json.map((it: any) => {
         if (!attribute.generic) {
-          throw new Error(`${constructor.name}::${attribute.name} has not specified type`)
+          throw new Error(`${constructor.name}::${attribute.name.toString()} has not specified type`)
         }
         return propertyResolver(
           it,
-          new AttributeDefinition(attribute.generic, `${attribute.name}[]`), attribute.generic
+          new AttributeDefinition(attribute.generic, `${attribute.name.toString()}[]`), attribute.generic
         )
       })
     },
@@ -65,7 +65,7 @@ const strategyGenerator = (entityResolver: (json: any, constructor: Function) =>
     Number: (json: any, attribute: AttributeDefinition, constructor: Function) => {
       const number = attribute.type(json)
       if (Number.isNaN(number)) {
-        throw new Error(`${constructor.name}::${attribute.name} is not a Number`)
+        throw new Error(`${constructor.name}::${attribute.name.toString()} is not a Number`)
       }
       return number
     },
@@ -80,7 +80,7 @@ const checkProperty = (json: any, attribute: AttributeDefinition, constructor: F
       // todo: refactor this - we should not mutate arguments
       json = attribute.options.defaultValue
     } else {
-      throw new Error(`${constructor.name}::${attribute.name} is not optional field`)
+      throw new Error(`${constructor.name}::${attribute.name.toString()} is not optional field`)
     }
   }
   const checkPropertyStrategyList = strategyGenerator(checkJson, checkProperty)
@@ -90,7 +90,7 @@ const checkProperty = (json: any, attribute: AttributeDefinition, constructor: F
 
 export const checkJson = (json: any = {}, constructor: Function) => {
   const attributeList: AttributeDefinition[] = Reflect.getMetadata(ATTRIBUTE_LIST, constructor)
-  return attributeList.map(attribute => checkProperty(json[attribute.name], attribute, constructor))
+  return attributeList.map(attribute => checkProperty(json[attribute.name.toString()], attribute, constructor))
 }
 
 const instantiateProperty = (json: any, attribute: AttributeDefinition, constructor: Function) => {
@@ -99,7 +99,7 @@ const instantiateProperty = (json: any, attribute: AttributeDefinition, construc
       // todo: refactor this - we should not mutate arguments
       json = attribute.options.defaultValue
     } else {
-      throw new Error(`${constructor.name}::${attribute.name} is not optional field`)
+      throw new Error(`${constructor.name}::${attribute.name.toString()} is not optional field`)
     }
   }
   const checkPropertyStrategyList = strategyGenerator(<any>instantiateJson, instantiateProperty)
@@ -111,7 +111,7 @@ export const instantiateJson = <T>(json: any = {}, constructor: any): T => {
   const attributeList: AttributeDefinition[] = Reflect.getMetadata(ATTRIBUTE_LIST, constructor.prototype)
   const instance = new constructor()
   attributeList.forEach(
-    attribute => instance[attribute.name] = instantiateProperty(json[attribute.name], attribute, constructor)
+    attribute => instance[attribute.name.toString()] = instantiateProperty(json[attribute.name.toString()], attribute, constructor)
   )
   return instance
 }
