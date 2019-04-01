@@ -1,6 +1,6 @@
 # Node.js App Starter Kit
 
-Starter Kit for monolithic Backend applications
+Starter Kit for Backend applications
 
 ## Getting Started
 
@@ -25,6 +25,7 @@ npm run start
 ```
 
 If you need to compile application for deployment
+
 ```
 npm run clean && npm run tsc
 ```
