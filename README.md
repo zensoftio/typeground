@@ -1,6 +1,6 @@
 # Node.js App Starter Kit
 
-One Paragraph of project description goes here
+Starter Kit for monolithic Backend applications
 
 ## Getting Started
 
@@ -8,53 +8,36 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+For running this application you need to have [NodeJs](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/).
+We recommend to use [NVM](https://github.com/creationix/nvm) for managing NodeJs versions
+For NVM installation please refer to [manual](https://github.com/creationix/nvm#install--update-script)
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
 ```
-Give the example
+npm install
 ```
 
-And repeat
+### Run application
 
 ```
-until finished
+npm run start
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+If you need to compile application for deployment
+```
+npm run clean && npm run tsc
+```
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
 ```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
+npm run test
 ```
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+TODO: fill this
 
 ## Built With
 
@@ -70,13 +53,16 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://git.zensoft.io/ops/typescript-backend/tags). 
 
 ## Authors
 
 * **Nikita Nogay** - *Initial work* - [nikita.nogay.kg](https://git.zensoft.io/nikita.nogay.kg)
+* **Viacheslav Kim** - [viacheslav.kim.kg](https://git.zensoft.io/viacheslav.kim.kg)
+* **Beksultan Torokulov** - [beks.torokulov.kg](https://git.zensoft.io/beks.torokulov.kg)
+* **Davran Sabiraliev** - [davran.sabiraliev.kg](https://git.zensoft.io/davran.sabiraliev.kg)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://git.zensoft.io/ops/typescript-backend/graphs/master) who participated in this project.
 
 ## License
 
@@ -84,6 +70,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Heavily inspired by [Spring Framework](https://github.com/spring-projects/spring-framework)
