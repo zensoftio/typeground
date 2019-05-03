@@ -54,20 +54,11 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://git.zensoft.io/ops/typescript-backend/tags). 
-
-## Authors
-
-* **Nikita Nogay** - *Initial work* - [nikita.nogay.kg](https://git.zensoft.io/nikita.nogay.kg)
-* **Viacheslav Kim** - [viacheslav.kim.kg](https://git.zensoft.io/viacheslav.kim.kg)
-* **Beksultan Torokulov** - [beks.torokulov.kg](https://git.zensoft.io/beks.torokulov.kg)
-* **Davran Sabiraliev** - [davran.sabiraliev.kg](https://git.zensoft.io/davran.sabiraliev.kg)
-
-See also the list of [contributors](https://git.zensoft.io/ops/typescript-backend/graphs/master) who participated in this project.
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zensoftio/typeground/releases). 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.TXT) file for details
 
 ## Acknowledgments
 
