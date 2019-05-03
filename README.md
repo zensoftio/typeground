@@ -1,6 +1,6 @@
 # Type Ground
 
-Starter Kit for Backend applications
+Starter Kit for Backend applications.
 
 ## Getting Started
 
