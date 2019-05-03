@@ -1,8 +1,8 @@
 {
-  "name": "ts-init",
+  "name": "typeground",
   "version": "1.0.0",
-  "description": "TypeScript Express",
-  "main": "index.js",
+  "description": "Back end application framework",
+  "main": "src/server.ts",
   "scripts": {
     "start": "npm run clean && npm run tsc && node --inspect ./bin/www",
     "clean": "node ./node_modules/rimraf/bin.js ./dist/",

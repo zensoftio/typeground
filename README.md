@@ -1,4 +1,4 @@
-# Node.js App Starter Kit
+# Type Ground
 
 Starter Kit for Backend applications
 
