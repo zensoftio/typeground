@@ -4,13 +4,16 @@ Starter Kit for Backend applications
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your 
+local machine for development and testing purposes. See deployment for notes 
+on how to deploy the project on a live system.
 
 ### Prerequisites
 
-For running this application you need to have [NodeJs](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/).
-We recommend to use [NVM](https://github.com/creationix/nvm) for managing NodeJs versions
-For NVM installation please refer to [manual](https://github.com/creationix/nvm#install--update-script)
+For running this application you need to have [NodeJs](https://nodejs.org/en/) 
+and [NPM](https://www.npmjs.com/).
+We recommend to use [NVM](https://github.com/creationix/nvm) for managing Node.js versions.
+For NVM installation please refer to [manual](https://github.com/creationix/nvm#install--update-script).
 
 ### Installing
 
@@ -24,7 +27,7 @@ npm install
 npm run start
 ```
 
-If you need to compile application for deployment
+If you need to compile application for deployment.
 
 ```
 npm run clean && npm run tsc
@@ -38,7 +41,7 @@ npm run test
 
 ## Deployment
 
-TODO: fill this
+// TODO: fill this
 
 ## Built With
 
@@ -50,15 +53,18 @@ TODO: fill this
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, 
+and the process for submitting pull requests to us.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zensoftio/typeground/releases). 
+We use [SemVer](http://semver.org/) for versioning. 
+For the versions available, see the [tags on this repository](https://github.com/zensoftio/typeground/releases). 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
+This project is licensed under the MIT License - see the 
+[LICENSE.txt](LICENSE.txt) file for details.
 
 ## Acknowledgments
 
