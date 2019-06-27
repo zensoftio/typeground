@@ -31,9 +31,9 @@ export default class DefaultUserService extends BaseService implements UserServi
     return await this.userRepository.createEntity(userCreateDto)
   }
 
-  async list() {
+  async list<UserDto>(): Promise<UserDto[]> {
     const all = await fetch(`http://localhost:8080${Pathes.User.ListApi}`)
-    return await all.json<UserDto[]>()
+    return await all.json()
   }
 
   listApi() {
