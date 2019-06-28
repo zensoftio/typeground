@@ -1,14 +1,18 @@
-import UserModel from '../models/user'
+import { ExchangePublishOptions, SubscribeCallback } from 'amqp'
 import BaseService from '../core/service/base'
-import {ExchangePublishOptions, SubscribeCallback} from 'amqp'
-import UserDto, {UserCreateDto} from '../dtos/user'
+import { UserCreateDto, UserUpdateDto } from '../dtos/user'
+import UserModel from '../models/user'
 
 export interface UserService extends BaseService {
   createUser(userCreateDto: UserCreateDto): Promise<UserModel>
 
-  list(): Promise<UserDto[]>
+  receiveUser(userId: string): Promise<UserModel | undefined>
 
-  listApi(): Promise<UserModel[] | undefined>
+  updateUser(userCreateDto: UserUpdateDto): Promise<UserModel | undefined>
+
+  deleteUser(userId: string): Promise<void>
+
+  receiveAllUsers(): Promise<UserModel[] | undefined>
 }
 
 export interface AmqpService extends BaseService {

@@ -10,3 +10,11 @@ export class UserCreateDto {
   @Attr()
   name: string
 }
+
+export class UserUpdateDto {
+  @Attr()
+  id: string
+
+  @Attr()
+  name: string
+}

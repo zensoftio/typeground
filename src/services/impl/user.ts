@@ -1,11 +1,9 @@
-import {AmqpService, UserService} from '../index'
-import {Autowired, ComponentByName} from '../../core/annotations/di'
-import BaseService from '../../core/service/base'
 import * as c from 'config'
-import Pathes from '../../enums/pathes'
-import fetch from 'node-fetch'
-import UserDto, {UserCreateDto} from '../../dtos/user'
-import {UserRepository} from '../../repositories'
+import { Autowired, ComponentByName } from '../../core/annotations/di'
+import BaseService from '../../core/service/base'
+import { UserCreateDto, UserUpdateDto } from '../../dtos/user'
+import { UserRepository } from '../../repositories'
+import { AmqpService, UserService } from '../index'
 
 @ComponentByName('UserService')
 export default class DefaultUserService extends BaseService implements UserService {
@@ -18,26 +16,33 @@ export default class DefaultUserService extends BaseService implements UserServi
   }
 
   @Autowired('AmqpService')
-  setAmqpService(amqpService: AmqpService) {
-    this.amqpService = amqpService
+  setAmqpService(service: AmqpService) {
+    this.amqpService = service
   }
 
   @Autowired('UserRepository')
-  setUserRepository(userRepository: UserRepository) {
-    this.userRepository = userRepository
+  setUserRepository(repository: UserRepository) {
+    this.userRepository = repository
   }
 
-  async createUser(userCreateDto: UserCreateDto) {
-    return await this.userRepository.createEntity(userCreateDto)
+  async createUser(dto: UserCreateDto) {
+    return await this.userRepository.createEntity(dto)
   }
 
-  async list<UserDto>(): Promise<UserDto[]> {
-    const all = await fetch(`http://localhost:8080${Pathes.User.ListApi}`)
-    return await all.json()
+  async receiveUser(userId: string) {
+    return this.userRepository.receiveEntity(userId)
   }
 
-  listApi() {
-    return this.userRepository.getAll()
+  async updateUser(dto: UserUpdateDto) {
+    return this.userRepository.updateEntity(dto)
+  }
+
+  async deleteUser(userId: string) {
+    return await this.userRepository.deleteEntity(userId)
+  }
+
+  async receiveAllUsers() {
+    return this.userRepository.receiveAll()
   }
 
   private async testAmqp() {
@@ -45,7 +50,7 @@ export default class DefaultUserService extends BaseService implements UserServi
       await this.amqpService.sendMessage(
         c.get('amqp.provider.test.exchange'),
         c.get('amqp.provider.test.routingKey'),
-        {message: 'some test'},
+        { message: 'some test' },
         {}
       )
     }
