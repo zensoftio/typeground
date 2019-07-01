@@ -11,7 +11,7 @@ import {
 } from '../core/annotations/controller'
 import { Autowired } from '../core/annotations/di'
 import UserDto, { UserCreateDto, UserUpdateDto } from '../dtos/user'
-import Pathes from '../enums/pathes'
+import Paths from '../enums/paths'
 import { UserService } from '../services'
 
 @RestController
@@ -20,40 +20,34 @@ export default class UserController extends BaseController {
   private userService: UserService
 
   @Autowired('UserService')
-  setUserService(userService: UserService) {
-    this.userService = userService
+  setUserService(service: UserService) {
+    this.userService = service
   }
 
-  @PostMapping(Pathes.User.Base)
+  @PostMapping(Paths.User.Base)
   async createUser(@RequestBody(UserCreateDto) dto: UserCreateDto): Promise<UserDto> {
     return this.userService.createUser(dto)
   }
 
-  @GetMapping(Pathes.User.UserId)
-  async receiveUser(@PathVariable('userId', String) userId: string): Promise<UserDto | undefined> {
-    return this.userService.receiveUser(userId)
+  @GetMapping(Paths.User.UserId)
+  async getUser(@PathVariable('userId', String) userId: string,
+                @RequestParam('test', Number) test?: number): Promise<UserDto | undefined> {
+    return this.userService.getUser(userId)
   }
 
-  @PutMapping(Pathes.User.Base)
+  @PutMapping(Paths.User.Base)
   async updateUser(@RequestBody(UserUpdateDto) dto: UserUpdateDto): Promise<UserDto | undefined> {
     return this.userService.updateUser(dto)
   }
 
-  @DeleteMapping(Pathes.User.UserId)
+  @DeleteMapping(Paths.User.UserId)
   async deleteUser(@PathVariable('userId', String) userId: string): Promise<void> {
     return this.userService.deleteUser(userId)
   }
 
-  @GetMapping(Pathes.User.Base)
+  @GetMapping(Paths.User.Base)
   async receiveAllUsers() {
     return this.userService.receiveAllUsers()
   }
 
-  @PostMapping(Pathes.User.New)
-  async index(@PathVariable('projectId', Number) projectId: number,
-              @RequestBody(UserCreateDto) userCreateDto: UserCreateDto,
-              @RequestParam('test', Number) test?: number): Promise<UserDto> {
-    console.log(projectId, test, userCreateDto)
-    return await this.userService.createUser(userCreateDto)
-  }
 }

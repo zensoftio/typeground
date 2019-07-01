@@ -2,6 +2,7 @@ import * as c from 'config'
 import { Autowired, ComponentByName } from '../../core/annotations/di'
 import BaseService from '../../core/service/base'
 import { UserCreateDto, UserUpdateDto } from '../../dtos/user'
+import UserModel from '../../models/user'
 import { UserRepository } from '../../repositories'
 import { AmqpService, UserService } from '../index'
 
@@ -12,7 +13,7 @@ export default class DefaultUserService extends BaseService implements UserServi
   private userRepository: UserRepository
 
   async postConstruct() {
-    await this.testAmqp()
+    await this.sendAmqpMessage()
   }
 
   @Autowired('AmqpService')
@@ -25,32 +26,32 @@ export default class DefaultUserService extends BaseService implements UserServi
     this.userRepository = repository
   }
 
-  async createUser(dto: UserCreateDto) {
-    return await this.userRepository.createEntity(dto)
+  async createUser(dto: UserCreateDto): Promise<UserModel> {
+    return this.userRepository.createEntity(dto)
   }
 
-  async receiveUser(userId: string) {
+  async getUser(userId: string): Promise<UserModel | undefined> {
     return this.userRepository.receiveEntity(userId)
   }
 
-  async updateUser(dto: UserUpdateDto) {
+  async updateUser(dto: UserUpdateDto): Promise<UserModel | undefined> {
     return this.userRepository.updateEntity(dto)
   }
 
-  async deleteUser(userId: string) {
-    return await this.userRepository.deleteEntity(userId)
+  async deleteUser(userId: string): Promise<void> {
+    return this.userRepository.deleteEntity(userId)
   }
 
-  async receiveAllUsers() {
+  async receiveAllUsers(): Promise<UserModel[] | undefined> {
     return this.userRepository.receiveAll()
   }
 
-  private async testAmqp() {
+  private async sendAmqpMessage() {
     if (c.has('amqp.provider.test.exchange') && c.has('amqp.provider.test.routingKey')) {
       await this.amqpService.sendMessage(
         c.get('amqp.provider.test.exchange'),
         c.get('amqp.provider.test.routingKey'),
-        { message: 'some test' },
+        'some test',
         {}
       )
     }

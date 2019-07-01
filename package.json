@@ -17,7 +17,7 @@
   "author": "Nick Ro",
   "license": "MIT",
   "dependencies": {
-    "amqp": "^0.2.7",
+    "amqplib": "^0.5.3",
     "body-parser": "^1.19.0",
     "config": "^3.1.0",
     "cookie-parser": "^1.4.4",
@@ -35,7 +35,7 @@
     "typeorm": "^0.2.18"
   },
   "devDependencies": {
-    "@types/amqp": "^0.2.4",
+    "@types/amqplib": "^0.5.13",
     "@types/body-parser": "^1.17.0",
     "@types/chai": "^4.1.7",
     "@types/config": "0.0.34",
