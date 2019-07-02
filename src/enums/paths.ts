@@ -1,5 +1,6 @@
 export default class Paths {
-  static userBaseUrl = '/users'
+  static apiV1BaseUrl = '/api/v1'
+  static userBaseUrl = `${Paths.apiV1BaseUrl}/users`
 
   static user = class {
     static base = Paths.userBaseUrl

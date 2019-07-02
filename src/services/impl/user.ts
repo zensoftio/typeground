@@ -57,7 +57,7 @@ export default class DefaultUserService extends BaseService implements UserServi
   }
 
   async getAllUsersByApiRequest(): Promise<UserDto[]> {
-    return apiRequest.get('/users')
+    return apiRequest.get('/api/v1/users')
   }
 
   async sendAmqpMessage(message: string): Promise<void> {
