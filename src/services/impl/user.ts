@@ -1,6 +1,7 @@
 import * as c from 'config'
 import { Autowired, ComponentByName } from '../../core/annotations/di'
 import BaseService from '../../core/service/base'
+import Request from '../../core/utils/request'
 import { default as UserDto, UserCreateDto, UserUpdateDto } from '../../dtos/user'
 import ErrorsConstants from '../../enums/errors-constants'
 import Injectables from '../../enums/injectables'
@@ -8,6 +9,8 @@ import UserModel from '../../models/user'
 import { UserRepository } from '../../repositories'
 import { AmqpService, UserService } from '../index'
 import { HttpDataNotFoundError } from '../../core/exceptions/http'
+
+const apiRequest = new Request('http://localhost:8080')
 
 @ComponentByName(Injectables.services.user)
 export default class DefaultUserService extends BaseService implements UserService {
@@ -49,8 +52,12 @@ export default class DefaultUserService extends BaseService implements UserServi
     return this.userRepository.deleteEntity(userId)
   }
 
-  async getAllUsers(): Promise<UserModel[]> {
+  async getAllUsers(): Promise<UserDto[]> {
     return this.userRepository.getAll()
+  }
+
+  async getAllUsersByApiRequest(): Promise<UserDto[]> {
+    return apiRequest.get('/users')
   }
 
   async sendAmqpMessage(message: string): Promise<void> {

@@ -15,6 +15,8 @@ export interface UserService extends BaseService {
 
   getAllUsers(): Promise<UserDto[]>
 
+  getAllUsersByApiRequest(): Promise<UserDto[]>
+
   sendAmqpMessage(message: string): Promise<void>
 }
 

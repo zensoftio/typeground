@@ -5,5 +5,6 @@ export default class Paths {
     static base = Paths.userBaseUrl
     static userId = `${Paths.userBaseUrl}/:userId`
     static sendMessage = `${Paths.userBaseUrl}/doSendMessage`
+    static apiRequest = `${Paths.userBaseUrl}/doApiRequest`
   }
 }

@@ -25,6 +25,11 @@ export default class UserController extends BaseController {
     this.userService = service
   }
 
+  @GetMapping(Paths.user.apiRequest)
+  async getAllUsersByApiRequest() {
+    return this.userService.getAllUsersByApiRequest()
+  }
+
   @PostMapping(Paths.user.base)
   async createUser(@RequestBody(UserCreateDto) dto: UserCreateDto): Promise<UserDto> {
     return this.userService.createUser(dto)
