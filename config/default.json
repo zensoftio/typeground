@@ -7,5 +7,38 @@
     "database": "nick",
     "schema": "public",
     "dialect": "postgres"
+  },
+  "amqp": {
+    "connection": {
+      "protocol": "amqp",
+      "hostname": "localhost",
+      "port": "5672",
+      "username": "amqp",
+      "password": "123",
+      "vhost": "amqp",
+      "locale": "en_US",
+      "heartbeat": 60
+    },
+    "provider": {
+      "test": {
+        "exchange": "message",
+        "routingKey": "message.send",
+        "options": {
+          "durable": false,
+          "autoDelete": true
+        }
+      }
+    },
+    "consumer": {
+      "test": {
+        "exchange": "message",
+        "routingKey": "message.send",
+        "queue": "message.send",
+        "options": {
+          "autoDelete": false,
+          "durable": false
+        }
+      }
+    }
   }
 }

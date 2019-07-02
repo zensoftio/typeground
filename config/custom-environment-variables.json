@@ -1,0 +1,17 @@
+{
+  "db": {
+    "user": "POSTGRES_USERNAME",
+    "username": "POSTGRES_USERNAME",
+    "password": "POSTGRES_PASSWORD",
+    "host": "POSTGRES_HOST",
+    "database": "POSTGRES_DB_NAME"
+  },
+  "amqp": {
+    "connection": {
+      "hostname": "AMQP_HOST",
+      "username": "AMQP_LOGIN",
+      "password": "AMQP_PASSWORD",
+      "vhost": "AMQP_VHOST"
+    }
+  }
+}

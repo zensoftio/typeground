@@ -12,10 +12,6 @@ export default class DefaultUserService extends BaseService implements UserServi
   private amqpService: AmqpService
   private userRepository: UserRepository
 
-  async postConstruct() {
-    await this.sendAmqpMessage()
-  }
-
   @Autowired('AmqpService')
   setAmqpService(service: AmqpService) {
     this.amqpService = service
@@ -46,12 +42,12 @@ export default class DefaultUserService extends BaseService implements UserServi
     return this.userRepository.receiveAll()
   }
 
-  private async sendAmqpMessage() {
+  async sendAmqpMessage(message: string): Promise<void> {
     if (c.has('amqp.provider.test.exchange') && c.has('amqp.provider.test.routingKey')) {
       await this.amqpService.sendMessage(
         c.get('amqp.provider.test.exchange'),
         c.get('amqp.provider.test.routingKey'),
-        'some test',
+        message,
         {}
       )
     }

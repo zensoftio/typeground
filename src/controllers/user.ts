@@ -30,8 +30,7 @@ export default class UserController extends BaseController {
   }
 
   @GetMapping(Paths.User.UserId)
-  async getUser(@PathVariable('userId', String) userId: string,
-                @RequestParam('test', Number) test?: number): Promise<UserDto | undefined> {
+  async getUser(@PathVariable('userId', String) userId: string): Promise<UserDto | undefined> {
     return this.userService.getUser(userId)
   }
 
@@ -48,6 +47,11 @@ export default class UserController extends BaseController {
   @GetMapping(Paths.User.Base)
   async receiveAllUsers() {
     return this.userService.receiveAllUsers()
+  }
+
+  @PostMapping(Paths.User.SendMessage)
+  async sendMessage(@RequestParam('message', String) message?: string): Promise<void> {
+    this.userService.sendAmqpMessage(message || 'test message')
   }
 
 }

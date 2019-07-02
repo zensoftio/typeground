@@ -15,6 +15,8 @@ export interface UserService extends BaseService {
   deleteUser(userId: string): Promise<void>
 
   receiveAllUsers(): Promise<UserModel[] | undefined>
+
+  sendAmqpMessage(message: string): Promise<void>
 }
 
 export interface AmqpService extends BaseService {

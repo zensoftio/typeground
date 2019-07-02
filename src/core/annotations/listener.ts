@@ -1,28 +1,13 @@
-import {Component} from './di'
 import * as c from 'config'
-
-const HANDLER_LISTENER_LIST = Symbol('handler_listener_list')
+import { Component } from './di'
 
 export const Listener = Component
 
-export const Amqp = (queueNameConfigValue: string) => (target: any, handler: string) => {
-  if (!c.has(queueNameConfigValue)) {
+export const Amqp = (queueConfigValue: string) => (target: any, handler: string) => {
+  if (!c.has(queueConfigValue)) {
     return
   }
-  const queueName = c.get(queueNameConfigValue)
+  const { queue: queueName, subscriptionOptions } = c.get(queueConfigValue)
 
-  if (!Reflect.hasMetadata(HANDLER_LISTENER_LIST, target)) {
-    Reflect.defineMetadata(HANDLER_LISTENER_LIST, [], target)
-  }
-
-  const handlerList = Reflect.getMetadata(HANDLER_LISTENER_LIST, target)
-  handlerList.push({queueName: queueName, handler})
-}
-
-export const bind = (instance: any) => {
-  Reflect.hasMetadata(HANDLER_LISTENER_LIST, instance) &&
-  Reflect.getMetadata(HANDLER_LISTENER_LIST, instance)
-         .forEach(
-           (it: any) => instance.amqpService.subscribe(it.queueName, (instance as any)[it.handler])
-         )
+  target.constructor.handlers.push({ queueName, handler, subscriptionOptions })
 }
