@@ -1,10 +1,10 @@
 {
   "db": {
     "driver": "pg",
-    "username": "postgres",
-    "password": "123",
+    "username": "typeground",
+    "password": "typeground",
     "host": "localhost",
-    "database": "nick",
+    "database": "typeground",
     "schema": "public",
     "dialect": "postgres"
   },
@@ -13,9 +13,9 @@
       "protocol": "amqp",
       "hostname": "localhost",
       "port": "5672",
-      "username": "amqp",
-      "password": "123",
-      "vhost": "amqp",
+      "username": "typeground",
+      "password": "typeground",
+      "vhost": "typeground",
       "locale": "en_US",
       "heartbeat": 60
     },
