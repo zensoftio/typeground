@@ -2,6 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import 'mocha'
 import * as sinonChai from 'sinon-chai'
+import ErrorsConstants from '../../enums/errors-constants'
 import { UserRepository } from '../../repositories/'
 import DefaultUserService from '../../services/impl/user'
 import {
@@ -84,12 +85,12 @@ describe('DefaultUserService: failed cases', () => {
   it('getUser: should failed to get a correct result', async () => {
     return service.getUser(DummyData.entryId)
                   .should.be
-                  .rejectedWith(`User not found by this id: ${DummyData.entryId}`)
+                  .rejectedWith(`${ErrorsConstants.user.notFoundById}: ${DummyData.entryId}`)
   })
 
   it('updateUser: should failed to get a correct result', async () => {
     return service.updateUser(UserUpdateDto)
                   .should.be
-                  .rejectedWith(`User not found by this id: ${UserUpdateDto.id}`)
+                  .rejectedWith(`${ErrorsConstants.user.notFoundById}: ${UserUpdateDto.id}`)
   })
 })
