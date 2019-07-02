@@ -1,9 +1,9 @@
 export default class Paths {
-  static UserBaseUrl = '/users'
+  static userBaseUrl = '/users'
 
-  static User = class {
-    static Base = Paths.UserBaseUrl
-    static UserId = `${Paths.UserBaseUrl}/:userId`
-    static SendMessage = `${Paths.UserBaseUrl}/doSendMessage`
+  static user = class {
+    static base = Paths.userBaseUrl
+    static userId = `${Paths.userBaseUrl}/:userId`
+    static sendMessage = `${Paths.userBaseUrl}/doSendMessage`
   }
 }

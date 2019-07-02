@@ -1,10 +1,11 @@
 import { EntityManager, EntityRepository, Repository } from 'typeorm'
 import { RepositoryByName } from '../../core/annotations/di'
 import { UserCreateDto, UserUpdateDto } from '../../dtos/user'
+import Injectables from '../../enums/injectables'
 import UserModel from '../../models/user'
 import { UserRepository } from '../index'
 
-@RepositoryByName('UserRepository')
+@RepositoryByName(Injectables.repositories.user)
 @EntityRepository(UserModel)
 export class DefaultUserRepository extends Repository<UserModel> implements UserRepository {
   async createEntity(dto: UserCreateDto, entityManager?: EntityManager): Promise<UserModel> {

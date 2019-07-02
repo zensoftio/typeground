@@ -2,6 +2,7 @@ import { Channel, connect, Connection, ConsumeMessage, Message, Options, Replies
 import * as c from 'config'
 import { ComponentByName } from '../../core/annotations/di'
 import BaseService from '../../core/service/base'
+import Injectables from '../../enums/injectables'
 import HttpInternalErrorException from '../../exceptions/http-internal-error'
 import { AmqpService } from '../index'
 
@@ -10,7 +11,7 @@ import Publish = Options.Publish
 import AssertExchange = Options.AssertExchange
 import AssertQueue = Options.AssertQueue
 
-@ComponentByName('AmqpService')
+@ComponentByName(Injectables.services.amqp)
 export default class DefaultAmqpService extends BaseService implements AmqpService {
   private connection: Connection
   private ready: Promise<Channel[]>

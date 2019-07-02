@@ -11,6 +11,7 @@ import {
 } from '../core/annotations/controller'
 import { Autowired } from '../core/annotations/di'
 import UserDto, { UserCreateDto, UserUpdateDto } from '../dtos/user'
+import Injectables from '../enums/injectables'
 import Paths from '../enums/paths'
 import { UserService } from '../services'
 
@@ -19,37 +20,37 @@ export default class UserController extends BaseController {
 
   private userService: UserService
 
-  @Autowired('UserService')
+  @Autowired(Injectables.services.user)
   setUserService(service: UserService) {
     this.userService = service
   }
 
-  @PostMapping(Paths.User.Base)
+  @PostMapping(Paths.user.base)
   async createUser(@RequestBody(UserCreateDto) dto: UserCreateDto): Promise<UserDto> {
     return this.userService.createUser(dto)
   }
 
-  @GetMapping(Paths.User.UserId)
+  @GetMapping(Paths.user.userId)
   async getUser(@PathVariable('userId', String) userId: string): Promise<UserDto | undefined> {
     return this.userService.getUser(userId)
   }
 
-  @PutMapping(Paths.User.Base)
+  @PutMapping(Paths.user.base)
   async updateUser(@RequestBody(UserUpdateDto) dto: UserUpdateDto): Promise<UserDto | undefined> {
     return this.userService.updateUser(dto)
   }
 
-  @DeleteMapping(Paths.User.UserId)
+  @DeleteMapping(Paths.user.userId)
   async deleteUser(@PathVariable('userId', String) userId: string): Promise<void> {
     return this.userService.deleteUser(userId)
   }
 
-  @GetMapping(Paths.User.Base)
+  @GetMapping(Paths.user.base)
   async receiveAllUsers() {
     return this.userService.receiveAllUsers()
   }
 
-  @PostMapping(Paths.User.SendMessage)
+  @PostMapping(Paths.user.sendMessage)
   async sendMessage(@RequestParam('message', String) message?: string): Promise<void> {
     this.userService.sendAmqpMessage(message || 'test message')
   }

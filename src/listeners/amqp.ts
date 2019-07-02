@@ -3,6 +3,7 @@ import * as c from 'config'
 import { Autowired } from '../core/annotations/di'
 import { Amqp, Listener } from '../core/annotations/listener'
 import { HttpBadRequestException } from '../core/exceptions/http'
+import Injectables from '../enums/injectables'
 import { AmqpService } from '../services'
 
 @Listener
@@ -12,7 +13,7 @@ export default class AmqpListener {
 
   private amqpService: AmqpService
 
-  @Autowired('AmqpService')
+  @Autowired(Injectables.services.amqp)
   setAmqpService(service: AmqpService) {
     this.amqpService = service
   }

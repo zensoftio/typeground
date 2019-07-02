@@ -2,22 +2,23 @@ import * as c from 'config'
 import { Autowired, ComponentByName } from '../../core/annotations/di'
 import BaseService from '../../core/service/base'
 import { UserCreateDto, UserUpdateDto } from '../../dtos/user'
+import Injectables from '../../enums/injectables'
 import UserModel from '../../models/user'
 import { UserRepository } from '../../repositories'
 import { AmqpService, UserService } from '../index'
 
-@ComponentByName('UserService')
+@ComponentByName(Injectables.services.user)
 export default class DefaultUserService extends BaseService implements UserService {
 
   private amqpService: AmqpService
   private userRepository: UserRepository
 
-  @Autowired('AmqpService')
+  @Autowired(Injectables.services.amqp)
   setAmqpService(service: AmqpService) {
     this.amqpService = service
   }
 
-  @Autowired('UserRepository')
+  @Autowired(Injectables.repositories.user)
   setUserRepository(repository: UserRepository) {
     this.userRepository = repository
   }
