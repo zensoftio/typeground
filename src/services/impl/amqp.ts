@@ -10,6 +10,7 @@ import Consume = Replies.Consume
 import Publish = Options.Publish
 import AssertExchange = Options.AssertExchange
 import AssertQueue = Options.AssertQueue
+import ErrorsConstants from '../../enums/errors-constants'
 
 @ComponentByName(Injectables.services.amqp)
 export default class DefaultAmqpService extends BaseService implements AmqpService {
@@ -25,6 +26,21 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
     }
   }
 
+  ackMessage(queueName: string, message: Message) {
+    const queueChannel = this.queueList.get(queueName)
+    if (!queueChannel) {
+      throw new HttpInternalError(`${ErrorsConstants.amqp.noQueueWithName} ${queueName}`)
+    }
+    queueChannel.ack(message)
+  }
+
+  nackMessage(queueName: string, message: Message, requeue: boolean = false) {
+    const queueChannel = this.queueList.get(queueName)
+    if (!queueChannel) {
+      throw new HttpInternalError(`${ErrorsConstants.amqp.noQueueWithName} ${queueName}`)
+    }
+    queueChannel.nack(message, false, requeue)
+  }
 
   async sendMessage(exchangeName: string, routingKey: string, message: string, options: Publish) {
     return this.ready
@@ -35,7 +51,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
                      exchangeName,
                      routingKey,
                      Buffer.from(message)
-                   )) : Promise.reject(`No exchange for name '${exchangeName}'`)
+                   )) : Promise.reject(`${ErrorsConstants.amqp.noExchangeForName} '${exchangeName}'`)
                })
                .catch((err: any) => {
                  console.error(err)
@@ -48,31 +64,45 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
                .then(() => {
                  const queue = this.queueList.get(queueName)
                  if (!queue) {
-                   throw new Error(`there is no queue for name ${queueName}`)
+                   throw new Error(`${ErrorsConstants.amqp.noQueueForName} ${queueName}`)
                  }
                  console.log(`Consumer added for: ${queueName}`)
                  return queue.consume(queueName, handler, options)
                })
                .catch((err: any) => {
-                 console.error(`Consumer error: ${err}`)
+                 console.error(`${ErrorsConstants.amqp.consumerError}: ${err}`)
                  throw err
                })
   }
 
-  public ackMessage(queueName: string, message: Message) {
-    const queueChannel = this.queueList.get(queueName)
-    if (!queueChannel) {
-      throw new HttpInternalError(`No such queue with name ${queueName}`)
+  private init() {
+    this.exchangeList = new Map()
+    this.queueList = new Map()
+    if (!c.has('amqp.connection')) {
+      throw new HttpInternalError(ErrorsConstants.amqp.configNotFound)
     }
-    queueChannel.ack(message)
-  }
 
-  public nackMessage(queueName: string, message: Message, requeue: boolean = false) {
-    const queueChannel = this.queueList.get(queueName)
-    if (!queueChannel) {
-      throw new HttpInternalError(`No such queue with name ${queueName}`)
-    }
-    queueChannel.nack(message, false, requeue)
+    this.ready = new Promise((resolve, reject) => connect(c.get('amqp.connection'))
+      .then(async (connection: Connection) => {
+        this.connection = connection
+        this.connection.on('close', () => {
+          console.error(`[AMQP] ${ErrorsConstants.amqp.tryingReconnect}`)
+          return setTimeout(() => this.init(), 1000)
+        })
+
+        this.connection.on('error', (err: any) => {
+          console.error(`[AMQP] ${ErrorsConstants.amqp.somethingWentWrong}`, err)
+          reject()
+        })
+        return resolve()
+      })
+      .catch(reject))
+      .then(() => this.setupExchanges())
+      .then(() => this.setupQueues())
+      .catch((err) => {
+        console.error(`[AMQP] ${ErrorsConstants.amqp.connectionError}`, err)
+        throw err
+      })
   }
 
   private async newExchange(exchangeName: string, options: AssertExchange): Promise<Channel> {
@@ -85,36 +115,6 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
     const queueChannel = await this.connection.createChannel()
     await queueChannel.assertQueue(queueName, options)
     return queueChannel
-  }
-
-  private init() {
-    this.exchangeList = new Map()
-    this.queueList = new Map()
-    if (!c.has('amqp.connection')) {
-      throw new HttpInternalError('No configuration for amqp was found!')
-    }
-
-    this.ready = new Promise((resolve, reject) => connect(c.get('amqp.connection'))
-      .then(async (connection: Connection) => {
-        this.connection = connection
-        this.connection.on('close', () => {
-          console.error('[AMQP] trying to reconnect')
-          return setTimeout(() => this.init(), 1000)
-        })
-
-        this.connection.on('error', (err: any) => {
-          console.error('[AMQP] error', err)
-          reject()
-        })
-        return resolve()
-      })
-      .catch(reject))
-      .then(() => this.setupExchanges())
-      .then(() => this.setupQueues())
-      .catch((err) => {
-        console.error('[AMQP] error during connecting to the service.\nPlease check configurations.\n', err)
-        throw err
-      })
   }
 
   private async setupExchanges() {
