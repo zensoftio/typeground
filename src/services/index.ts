@@ -1,20 +1,19 @@
 import { ConsumeMessage, Message, Options, Replies } from 'amqplib'
 import BaseService from '../core/service/base'
-import { UserCreateDto, UserUpdateDto } from '../dtos/user'
-import UserModel from '../models/user'
+import { UserCreateDto, default as UserDto, UserUpdateDto } from '../dtos/user'
 import Consume = Replies.Consume
 import Publish = Options.Publish
 
 export interface UserService extends BaseService {
-  createUser(dto: UserCreateDto): Promise<UserModel>
+  createUser(dto: UserCreateDto): Promise<UserDto>
 
-  getUser(userId: string): Promise<UserModel | undefined>
+  getUser(userId: string): Promise<UserDto>
 
-  updateUser(dto: UserUpdateDto): Promise<UserModel | undefined>
+  updateUser(dto: UserUpdateDto): Promise<UserDto>
 
   deleteUser(userId: string): Promise<void>
 
-  receiveAllUsers(): Promise<UserModel[] | undefined>
+  getAllUsers(): Promise<UserDto[]>
 
   sendAmqpMessage(message: string): Promise<void>
 }

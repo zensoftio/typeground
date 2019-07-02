@@ -1,11 +1,12 @@
 import * as c from 'config'
 import { Autowired, ComponentByName } from '../../core/annotations/di'
 import BaseService from '../../core/service/base'
-import { UserCreateDto, UserUpdateDto } from '../../dtos/user'
+import { UserCreateDto, default as UserDto, UserUpdateDto } from '../../dtos/user'
 import Injectables from '../../enums/injectables'
 import UserModel from '../../models/user'
 import { UserRepository } from '../../repositories'
 import { AmqpService, UserService } from '../index'
+import { HttpDataNotFoundError } from '../../core/exceptions/http'
 
 @ComponentByName(Injectables.services.user)
 export default class DefaultUserService extends BaseService implements UserService {
@@ -27,20 +28,28 @@ export default class DefaultUserService extends BaseService implements UserServi
     return this.userRepository.createEntity(dto)
   }
 
-  async getUser(userId: string): Promise<UserModel | undefined> {
-    return this.userRepository.receiveEntity(userId)
+  async getUser(userId: string): Promise<UserDto> {
+    const user = await this.userRepository.getEntity(userId)
+    if (!user) {
+      throw new HttpDataNotFoundError(`User not found by this id: ${userId}`)
+    }
+    return user
   }
 
-  async updateUser(dto: UserUpdateDto): Promise<UserModel | undefined> {
-    return this.userRepository.updateEntity(dto)
+  async updateUser(dto: UserUpdateDto): Promise<UserDto> {
+    const user = await this.userRepository.updateEntity(dto)
+    if (!user) {
+      throw new HttpDataNotFoundError(`User not found by this id: ${dto.id}`)
+    }
+    return user
   }
 
   async deleteUser(userId: string): Promise<void> {
     return this.userRepository.deleteEntity(userId)
   }
 
-  async receiveAllUsers(): Promise<UserModel[] | undefined> {
-    return this.userRepository.receiveAll()
+  async getAllUsers(): Promise<UserModel[]> {
+    return this.userRepository.getAll()
   }
 
   async sendAmqpMessage(message: string): Promise<void> {

@@ -13,7 +13,7 @@ export class DefaultUserRepository extends Repository<UserModel> implements User
     return entityManager ? entityManager.save(entity) : this.save(entity)
   }
 
-  async receiveEntity(userId: string): Promise<UserModel | undefined> {
+  async getEntity(userId: string): Promise<UserModel | undefined> {
     return this.findOne({
                           where: { id: userId }
                         })
@@ -25,7 +25,7 @@ export class DefaultUserRepository extends Repository<UserModel> implements User
                       .set(dto)
                       .where('id = :id', { id: dto.id })
                       .execute()
-    return this.receiveEntity(dto.id)
+    return this.getEntity(dto.id)
   }
 
   async deleteEntity(userId: string, entityManager?: EntityManager): Promise<void> {
@@ -36,7 +36,7 @@ export class DefaultUserRepository extends Repository<UserModel> implements User
                       .execute()
   }
 
-  async receiveAll(): Promise<UserModel[] | undefined> {
+  async getAll(): Promise<UserModel[]> {
     return this.find()
   }
 }

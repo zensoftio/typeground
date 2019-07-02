@@ -31,12 +31,12 @@ export default class UserController extends BaseController {
   }
 
   @GetMapping(Paths.user.userId)
-  async getUser(@PathVariable('userId', String) userId: string): Promise<UserDto | undefined> {
+  async getUser(@PathVariable('userId', String) userId: string): Promise<UserDto> {
     return this.userService.getUser(userId)
   }
 
   @PutMapping(Paths.user.base)
-  async updateUser(@RequestBody(UserUpdateDto) dto: UserUpdateDto): Promise<UserDto | undefined> {
+  async updateUser(@RequestBody(UserUpdateDto) dto: UserUpdateDto): Promise<UserDto> {
     return this.userService.updateUser(dto)
   }
 
@@ -46,8 +46,8 @@ export default class UserController extends BaseController {
   }
 
   @GetMapping(Paths.user.base)
-  async receiveAllUsers() {
-    return this.userService.receiveAllUsers()
+  async getAllUsers() {
+    return this.userService.getAllUsers()
   }
 
   @PostMapping(Paths.user.sendMessage)
