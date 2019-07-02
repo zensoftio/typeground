@@ -1,9 +1,9 @@
 import { Channel, connect, Connection, ConsumeMessage, Message, Options, Replies } from 'amqplib'
 import * as c from 'config'
 import { ComponentByName } from '../../core/annotations/di'
+import { HttpInternalError } from '../../core/exceptions/http'
 import BaseService from '../../core/service/base'
 import Injectables from '../../enums/injectables'
-import HttpInternalErrorException from '../../exceptions/http-internal-error'
 import { AmqpService } from '../index'
 
 import Consume = Replies.Consume
@@ -62,7 +62,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   public ackMessage(queueName: string, message: Message) {
     const queueChannel = this.queueList.get(queueName)
     if (!queueChannel) {
-      throw new HttpInternalErrorException(`No such queue with name ${queueName}`)
+      throw new HttpInternalError(`No such queue with name ${queueName}`)
     }
     queueChannel.ack(message)
   }
@@ -70,7 +70,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   public nackMessage(queueName: string, message: Message, requeue: boolean = false) {
     const queueChannel = this.queueList.get(queueName)
     if (!queueChannel) {
-      throw new HttpInternalErrorException(`No such queue with name ${queueName}`)
+      throw new HttpInternalError(`No such queue with name ${queueName}`)
     }
     queueChannel.nack(message, false, requeue)
   }
@@ -91,7 +91,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
     this.exchangeList = new Map()
     this.queueList = new Map()
     if (!c.has('amqp.connection')) {
-      throw new HttpInternalErrorException('No configuration for amqp was found!')
+      throw new HttpInternalError('No configuration for amqp was found!')
     }
 
     this.ready = new Promise((resolve, reject) => connect(c.get('amqp.connection'))
