@@ -1,6 +1,6 @@
 {
   "name": "typeground",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Back end application framework",
   "main": "src/server.ts",
   "scripts": {
