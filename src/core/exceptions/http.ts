@@ -43,6 +43,17 @@ export class HttpAuthNotFoundError extends HttpException {
 }
 
 /**
+ * @class HttpAuthNotFoundError
+ * @extends HttpException
+ */
+export class HttpDataNotFoundError extends HttpException {
+  constructor(message: string = 'Not found') {
+    super(404, message)
+    Object.setPrototypeOf(this, HttpAuthNotFoundError.prototype)
+  }
+}
+
+/**
  * @class HttpAuthFailedError
  * @extends HttpException
  */

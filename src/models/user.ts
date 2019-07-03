@@ -1,9 +1,12 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('users')
 export default class UserModel {
 
-  @Column({ type: 'varchar' })
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @Column({ type: 'varchar', length: 255 })
   name: string
 
 }

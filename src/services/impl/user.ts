@@ -1,51 +1,71 @@
-import {AmqpService, UserService} from '../index'
-import {Autowired, ComponentByName} from '../../core/annotations/di'
-import BaseService from '../../core/service/base'
 import * as c from 'config'
-import Pathes from '../../enums/pathes'
-import fetch from 'node-fetch'
-import UserDto, {UserCreateDto} from '../../dtos/user'
-import {UserRepository} from '../../repositories'
+import { Autowired, ComponentByName } from '../../core/annotations/di'
+import BaseService from '../../core/service/base'
+import Request from '../../core/utils/request'
+import { default as UserDto, UserCreateDto, UserUpdateDto } from '../../dtos/user'
+import ErrorsConstants from '../../enums/errors-constants'
+import Injectables from '../../enums/injectables'
+import UserModel from '../../models/user'
+import { UserRepository } from '../../repositories'
+import { AmqpService, UserService } from '../index'
+import { HttpDataNotFoundError } from '../../core/exceptions/http'
 
-@ComponentByName('UserService')
+const apiRequest = new Request('http://localhost:8080')
+
+@ComponentByName(Injectables.services.user)
 export default class DefaultUserService extends BaseService implements UserService {
 
   private amqpService: AmqpService
   private userRepository: UserRepository
 
-  async postConstruct() {
-    await this.testAmqp()
+  @Autowired(Injectables.services.amqp)
+  setAmqpService(service: AmqpService) {
+    this.amqpService = service
   }
 
-  @Autowired('AmqpService')
-  setAmqpService(amqpService: AmqpService) {
-    this.amqpService = amqpService
+  @Autowired(Injectables.repositories.user)
+  setUserRepository(repository: UserRepository) {
+    this.userRepository = repository
   }
 
-  @Autowired('UserRepository')
-  setUserRepository(userRepository: UserRepository) {
-    this.userRepository = userRepository
+  async createUser(dto: UserCreateDto): Promise<UserModel> {
+    return this.userRepository.createEntity(dto)
   }
 
-  async createUser(userCreateDto: UserCreateDto) {
-    return await this.userRepository.createEntity(userCreateDto)
+  async getUser(userId: string): Promise<UserDto> {
+    const user = await this.userRepository.getEntity(userId)
+    if (!user) {
+      throw new HttpDataNotFoundError(`${ErrorsConstants.user.notFoundById}: ${userId}`)
+    }
+    return user
   }
 
-  async list() {
-    const all = await fetch(`http://localhost:8080${Pathes.User.ListApi}`)
-    return await all.json<UserDto[]>()
+  async updateUser(dto: UserUpdateDto): Promise<UserDto> {
+    const user = await this.userRepository.updateEntity(dto)
+    if (!user) {
+      throw new HttpDataNotFoundError(`${ErrorsConstants.user.notFoundById}: ${dto.id}`)
+    }
+    return user
   }
 
-  listApi() {
+  async deleteUser(userId: string): Promise<void> {
+    return this.userRepository.deleteEntity(userId)
+  }
+
+  async getAllUsers(): Promise<UserDto[]> {
     return this.userRepository.getAll()
   }
 
-  private async testAmqp() {
+  async getAllUsersByApiRequest(): Promise<UserDto[]> {
+    return apiRequest.get('/api/v1/users')
+  }
+
+  async sendAmqpMessage(message: string): Promise<void> {
     if (c.has('amqp.provider.test.exchange') && c.has('amqp.provider.test.routingKey')) {
       await this.amqpService.sendMessage(
         c.get('amqp.provider.test.exchange'),
         c.get('amqp.provider.test.routingKey'),
-        {message: 'some test'},
+        message,
         {}
       )
     }
