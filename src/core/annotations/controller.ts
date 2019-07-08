@@ -84,9 +84,9 @@ export const routerBind = (router: any, controller: Controller) =>
              async (req: Request, res: Response, next: NextFunction) => {
                try {
                  const metadata = getArgsFromMetadata(controller)
-                 const args = metadata.filter(({ method }) => method === it.key)
-                                      .map((it: Parameter) => parameterStrategy(it, req))
-                 controller.response(res, await (controller as any)[it.key].bind(controller)(...args))
+                 const method = metadata.find(({ method }) => method === it.key)
+                 const args = method && await parameterStrategy(method, req)
+                 controller.response(res, await (controller as any)[it.key].bind(controller)(args))
                } catch (e) {
                  controller.error(res, controller.errorHandler(e))
                }
