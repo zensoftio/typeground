@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import { validate } from 'class-validator'
 
 const ATTRIBUTE_LIST = Symbol('attribute_list')
 
@@ -107,11 +108,16 @@ const instantiateProperty = (json: any, attribute: AttributeDefinition, construc
   return checkPropertyStrategy(json, attribute, constructor)
 }
 
-export const instantiateJson = <T>(json: any = {}, constructor: any): T => {
-  const attributeList: AttributeDefinition[] = Reflect.getMetadata(ATTRIBUTE_LIST, constructor.prototype)
-  const instance = new constructor()
-  attributeList.forEach(
-    attribute => instance[attribute.name.toString()] = instantiateProperty(json[attribute.name.toString()], attribute, constructor)
-  )
-  return instance
+export const instantiateJson = async <T>(json: any = {}, constructor: any): Promise<T> => {
+  const instance = new constructor(json)
+  return validate(instance)
+    .then(errors => {
+      if (errors.length > 0) {
+        const constraint = errors[0].constraints
+        const errorMessage = Object.keys(constraint).map(key => constraint[key]).join(', ')
+        console.error(`Validation failed: ${errorMessage}`)
+        throw new Error(`Validation failed: ${errorMessage}`)
+      }
+      return instance
+    })
 }
