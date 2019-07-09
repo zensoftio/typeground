@@ -1,8 +1,5 @@
-import { ConsumeMessage, Message, Options, Replies } from 'amqplib'
 import BaseService from '../core/service/base'
-import { UserCreateDto, default as UserDto, UserUpdateDto } from '../dtos/user'
-import Consume = Replies.Consume
-import Publish = Options.Publish
+import { default as UserDto, UserCreateDto, UserUpdateDto } from '../dtos/user'
 
 export interface UserService extends BaseService {
   createUser(dto: UserCreateDto): Promise<UserDto>
@@ -18,16 +15,4 @@ export interface UserService extends BaseService {
   getAllUsersByApiRequest(): Promise<UserDto[]>
 
   sendAmqpMessage(message: string): Promise<void>
-}
-
-export interface AmqpService extends BaseService {
-  sendMessage(exchangeName: string, routingKey: string, message: string, options: Publish)
-    : Promise<any>
-
-  subscribe(queueName: string, handler: (msg: ConsumeMessage | null) => any, options?: Consume | undefined)
-    : Promise<Consume>
-
-  ackMessage(queueName: string, ackMessage: Message): void
-
-  nackMessage(queueName: string, message: Message, requeue?: boolean): void
 }
