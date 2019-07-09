@@ -77,7 +77,7 @@ export class Server {
         username: c.get('db.username'),
         password: c.get('db.password'),
         database: c.get('db.database'),
-        entities: ['dist/models/*.js'],
+        entities: ['dist/src/models/*.js'],
         migrationsRun: false
       }
       await createConnection(typeOrmConfigs)

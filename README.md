@@ -22,52 +22,50 @@ For NVM installation please refer to [manual](https://github.com/creationix/nvm#
 2) Set up PostgreSQL via docker for more information visit [this][dockerPostgres]
     * Pull Postgres docker image
     ```
-        docker pull postgres
+    docker pull postgres
     ```
     * Run docker container
     ```
-        docker run -d --restart unless-stopped --name postgres --net host --hostname postgres -e POSTGRES_USER=typeground -e POSTGRES_PASSWORD=typeground -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
+    docker run -d --restart unless-stopped --name postgres --net host --hostname postgres -e POSTGRES_USER=typeground -e POSTGRES_PASSWORD=typeground -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres
     ```
     * Open psql shell
     ```
-        docker exec -it postgres psql -U postgres
+    docker exec -it postgres psql -U postgres
     ```
     * Create 'typeground' role
     ```
-       CREATE USER typeground WITH LOGIN PASSWORD 'typeground';
-       ALTER ROLE typeground WITH SUPERUSER; 
+    CREATE USER typeground WITH LOGIN PASSWORD 'typeground';
+    ALTER ROLE typeground WITH SUPERUSER; 
     ```
     * Create 'typeground' database
     ```
-        CREATE DATABASE typeground;
-        GRANT ALL PRIVILEGES ON DATABASE typeground TO typeground;
+    CREATE DATABASE typeground;
+    GRANT ALL PRIVILEGES ON DATABASE typeground TO typeground;
     ```
     
 3) Set up RabbitMQ via docker for more information visit [this][dockerRabbitMq]
 
     * Pull RabbitMQ image from docker
     ```
-       docker pull rabbitmq
+    docker pull rabbitmq
     ```
     * Run docker container
     ```
-       docker run -d --restart unless-stopped --name rabbitmq --net host -v rabbitmq_data:/var/lib/rabbitmq -e RABBITMQ_DEFAULT_USER=typeground -e RABBITMQ_DEFAULT_PASS=typeground rabbitmq:3-management-alpine
+    docker run -d --restart unless-stopped --name rabbitmq --net host -v rabbitmq_data:/var/lib/rabbitmq -e RABBITMQ_DEFAULT_USER=typeground -e RABBITMQ_DEFAULT_PASS=typeground rabbitmq:3-management-alpine
     ```
     * RabbitMQ management panel available [here][localhostRabbitManagementPanel]
 
 4) Install dependencies    
     ```
-        npm install
+    npm install
     ```
 5) Run project
    ```
-        npm run start
+   npm run start
    ```
 
 ## Running the tests
-   ```
-        npm run test
-   ```
+- `npm run test`
 
 ## Start Project with separated commands
 - `npm run clean`
