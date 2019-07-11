@@ -46,6 +46,8 @@
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^2.6.3",
+    "swagger-jsdoc": "^3.3.0",
+    "swagger-ui-express": "^4.0.7",
     "typeorm": "^0.2.18"
   },
   "devDependencies": {
@@ -62,6 +64,8 @@
     "@types/node-fetch": "^2.3.7",
     "@types/sinon": "^7.0.13",
     "@types/sinon-chai": "^3.2.2",
+    "@types/swagger-jsdoc": "0.0.2",
+    "@types/swagger-ui-express": "^3.0.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^6.1.4",
