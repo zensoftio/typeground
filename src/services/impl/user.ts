@@ -1,14 +1,15 @@
 import * as c from 'config'
 import { Autowired, ComponentByName } from '../../core/annotations/di'
+import { HttpDataNotFoundError } from '../../core/exceptions/http'
 import BaseService from '../../core/service/base'
+import { AmqpService } from '../../core/service/index'
 import Request from '../../core/utils/request'
 import { default as UserDto, UserCreateDto, UserUpdateDto } from '../../dtos/user'
 import ErrorsConstants from '../../enums/errors-constants'
 import Injectables from '../../enums/injectables'
 import UserModel from '../../models/user'
 import { UserRepository } from '../../repositories'
-import { AmqpService, UserService } from '../index'
-import { HttpDataNotFoundError } from '../../core/exceptions/http'
+import { UserService } from '../index'
 
 const apiRequest = new Request('http://localhost:8080')
 

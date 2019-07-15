@@ -4,13 +4,17 @@
     "module": "commonjs",
     "sourceMap": true,
     "strict": true,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "strictPropertyInitialization": false
+    "rootDir": "./",
+    "strictPropertyInitialization": false,
+    "declaration": true
   },
   "files": [
+    "./index.ts",
     "./src/server.ts"
   ],
   "include": [

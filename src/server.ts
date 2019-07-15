@@ -12,6 +12,8 @@ import DBMigrate = require('db-migrate')
 import cookieParser = require('cookie-parser')
 import errorHandler = require('errorhandler')
 import morgan = require('morgan')
+import swaggerJSDoc = require('swagger-jsdoc');
+import swaggerUi = require('swagger-ui-express');
 
 export class Server {
 
@@ -77,7 +79,7 @@ export class Server {
         username: c.get('db.username'),
         password: c.get('db.password'),
         database: c.get('db.database'),
-        entities: ['dist/models/*.js'],
+        entities: ['dist/src/models/*.js'],
         migrationsRun: false
       }
       await createConnection(typeOrmConfigs)
@@ -95,5 +97,26 @@ export class Server {
     injectionList.forEach(it => it.postConstruct ? it.postConstruct() : null)
 
     this.app.use(router)
+
+    const options = {
+      swaggerDefinition: {
+        info: {
+          description: 'API specification',
+          version: '1.1.1',
+          title: 'Typeground API',
+        },
+        host: `localhost:8080/api/v1`,
+        basePath: '/',
+        produces: ['application/json']
+      },
+      apis: ['./**/*.ts'],
+    };
+
+    const oasDefinition = swaggerJSDoc(options);
+    const swaggerOptions = {
+      customSiteTitle: 'Typeground API',
+      customCss: '.topbar { display: none } .scheme-container { display: none }'
+    };
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(oasDefinition, swaggerOptions));
   }
 }

@@ -1,18 +1,16 @@
 import { Channel, connect, Connection, ConsumeMessage, Message, Options, Replies } from 'amqplib'
 import * as c from 'config'
-import { ComponentByName } from '../../core/annotations/di'
-import { HttpInternalError } from '../../core/exceptions/http'
-import BaseService from '../../core/service/base'
-import Injectables from '../../enums/injectables'
-import { AmqpService } from '../index'
+import { ComponentByName } from '../annotations/di'
+import { HttpInternalError } from '../exceptions/http'
+import BaseService from '../service/base'
+import { AmqpService } from './index'
 
 import Consume = Replies.Consume
 import Publish = Options.Publish
 import AssertExchange = Options.AssertExchange
 import AssertQueue = Options.AssertQueue
-import ErrorsConstants from '../../enums/errors-constants'
 
-@ComponentByName(Injectables.services.amqp)
+@ComponentByName('AmqpService')
 export default class DefaultAmqpService extends BaseService implements AmqpService {
   private connection: Connection
   private ready: Promise<Channel[]>
@@ -29,7 +27,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   ackMessage(queueName: string, message: Message) {
     const queueChannel = this.queueList.get(queueName)
     if (!queueChannel) {
-      throw new HttpInternalError(`${ErrorsConstants.amqp.noQueueWithName} ${queueName}`)
+      throw new HttpInternalError(`No such queue with name ${queueName}`)
     }
     queueChannel.ack(message)
   }
@@ -37,7 +35,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
   nackMessage(queueName: string, message: Message, requeue: boolean = false) {
     const queueChannel = this.queueList.get(queueName)
     if (!queueChannel) {
-      throw new HttpInternalError(`${ErrorsConstants.amqp.noQueueWithName} ${queueName}`)
+      throw new HttpInternalError(`No such queue with name ${queueName}`)
     }
     queueChannel.nack(message, false, requeue)
   }
@@ -51,7 +49,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
                      exchangeName,
                      routingKey,
                      Buffer.from(message)
-                   )) : Promise.reject(`${ErrorsConstants.amqp.noExchangeForName} '${exchangeName}'`)
+                   )) : Promise.reject(`No exchange for name '${exchangeName}'`)
                })
                .catch((err: any) => {
                  console.error(err)
@@ -64,13 +62,13 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
                .then(() => {
                  const queue = this.queueList.get(queueName)
                  if (!queue) {
-                   throw new Error(`${ErrorsConstants.amqp.noQueueForName} ${queueName}`)
+                   throw new Error(`There is no queue for name ${queueName}`)
                  }
                  console.log(`Consumer added for: ${queueName}`)
                  return queue.consume(queueName, handler, options)
                })
                .catch((err: any) => {
-                 console.error(`${ErrorsConstants.amqp.consumerError}: ${err}`)
+                 console.error(`Consumer error: ${err}`)
                  throw err
                })
   }
@@ -79,19 +77,19 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
     this.exchangeList = new Map()
     this.queueList = new Map()
     if (!c.has('amqp.connection')) {
-      throw new HttpInternalError(ErrorsConstants.amqp.configNotFound)
+      throw new HttpInternalError('No configuration for amqp was found!')
     }
 
     this.ready = new Promise((resolve, reject) => connect(c.get('amqp.connection'))
       .then(async (connection: Connection) => {
         this.connection = connection
         this.connection.on('close', () => {
-          console.error(`[AMQP] ${ErrorsConstants.amqp.tryingReconnect}`)
+          console.error('[AMQP] trying to reconnect')
           return setTimeout(() => this.init(), 1000)
         })
 
         this.connection.on('error', (err: any) => {
-          console.error(`[AMQP] ${ErrorsConstants.amqp.somethingWentWrong}`, err)
+          console.error('[AMQP] something went wrong', err)
           reject()
         })
         return resolve()
@@ -100,7 +98,7 @@ export default class DefaultAmqpService extends BaseService implements AmqpServi
       .then(() => this.setupExchanges())
       .then(() => this.setupQueues())
       .catch((err) => {
-        console.error(`[AMQP] ${ErrorsConstants.amqp.connectionError}`, err)
+        console.error('[AMQP] Error during connecting to the service. Please check configurations.', err)
         throw err
       })
   }
