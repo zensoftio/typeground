@@ -48,7 +48,7 @@
     "rimraf": "^2.6.3",
     "swagger-jsdoc": "^3.3.0",
     "swagger-ui-express": "^4.0.7",
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/amqplib": "^0.5.13",
