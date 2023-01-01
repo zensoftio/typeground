@@ -33,7 +33,7 @@
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "class-validator": "^0.9.1",
-    "config": "^3.1.0",
+    "config": "^3.3.8",
     "cookie-parser": "^1.4.4",
     "db-migrate": "^0.11.6",
     "db-migrate-pg": "^1.0.0",
